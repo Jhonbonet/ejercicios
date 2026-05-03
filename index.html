@@ -5,65 +5,103 @@
 <title>MecaMatic 3.0 - Sistema 300 Ejercicios</title>
 <style>
 :root {
-    --pinky: #FFFFC0; --ring: #C0FFC0; --middle: #C0FFFF;
-    --index-l: #FFC0FF; --index-r: #FF96FF; --thumb: #FFC0C0;
-    --guia: #ff0000; --board-bg: #008282;
-    --text-untyped: #ffffff; --text-typed: #000000;
+    /* Colores por dedos según estándar MecaMatic */
+    --pinky: #FFFFC0;    /* Meñique */
+    --ring: #C0FFC0;     /* Anular */
+    --middle: #C0FFFF;   /* Medio */
+    --index-l: #FFC0FF;  /* Índice Izq */
+    --index-r: #FF96FF;  /* Índice Der */
+    --thumb: #FFC0C0;    /* Pulgares */
+    --guia: #ff0000;
+    --board-bg: #008282;
+    --text-untyped: #ffffff;
+    --text-typed: #000000;
 }
 body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display: flex; flex-direction: column; align-items: center; padding: 10px; margin: 0; }
-#inicio, #app { width: 95%; max-width: 1200px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+#inicio, #app { width: 95%; max-width: 1100px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 .hidden { display: none; }
-.contenedor-principal { display: flex; gap: 15px; height: 80vh; }
-.columna-izquierda { flex: 2.5; display: flex; flex-direction: column; gap: 10px; }
-.sidebar-derecha { flex: 1; background: #f4f4f4; border: 2px solid #008282; border-radius: 8px; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+
+/* Pantalla de texto */
 .pantalla-verde { 
-    font-size: 24px; background-color: var(--board-bg); color: var(--text-untyped); 
-    border: 3px solid #004d40; padding: 15px; height: 120px; overflow: hidden; 
-    letter-spacing: 2px; white-space: pre-wrap; line-height: 1.1; position: relative; 
+    font-size: 26px; background-color: var(--board-bg); color: var(--text-untyped); 
+    border: 3px solid #004d40; padding: 20px; height: 120px; overflow: hidden; 
+    letter-spacing: 2px; white-space: pre-wrap; line-height: 1.2; position: relative; margin-bottom: 20px;
 }
 #input-oculto { position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; }
 .letra-hecha { color: var(--text-typed); }
 .letra-guia { background-color: var(--guia); color: white !important; animation: blinker 0.8s linear infinite; }
 @keyframes blinker { 50% { opacity: 0; } }
-.menu-fases { display: flex; gap: 5px; margin-bottom: 10px; }
-.btn-fase { padding: 8px; cursor: pointer; flex: 1; border: 1px solid #008282; background: white; font-weight: bold; }
+
+/* Layout */
+.contenedor-principal { display: flex; gap: 20px; }
+.columna-izquierda { flex: 2; }
+.sidebar-derecha { flex: 1; background: #f4f4f4; border: 2px solid #008282; border-radius: 8px; padding: 10px; height: 75vh; overflow-y: auto; }
+
+/* TECLADO COMPLETO */
+.teclado-container { background: #808080; padding: 15px; border-radius: 10px; border: 2px solid #404040; user-select: none; }
+.fila-teclado { display: flex; justify-content: center; gap: 4px; margin-bottom: 4px; }
+.tecla {
+    width: 45px; height: 45px; background: white; border: 1px solid #000;
+    display: flex; justify-content: center; align-items: center;
+    font-weight: bold; font-size: 14px; border-radius: 4px; box-shadow: 1px 1px 0px #404040;
+}
+.tecla.espacio { width: 300px; background: var(--thumb); }
+.tecla.tab, .tecla.caps { width: 60px; }
+.tecla.enter { width: 90px; }
+.tecla.shift { width: 110px; }
+
+/* Colores de dedos */
+.m-izq { background-color: var(--pinky); } .a-izq { background-color: var(--ring); }
+.med-izq { background-color: var(--middle); } .i-izq { background-color: var(--index-l); }
+.i-der { background-color: var(--index-r); } .med-der { background-color: var(--middle); }
+.a-der { background-color: var(--ring); } .m-der { background-color: var(--pinky); }
+
+/* Menú ejercicios */
+.btn-fase { padding: 10px; cursor: pointer; border: 1px solid #008282; background: #e0e0e0; font-weight: bold; margin-bottom: 10px; width: 100%; }
 .btn-fase.active { background: #008282; color: white; }
-.lista-ejercicios { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-bottom: 10px; }
-.btn-ejer { font-size: 10px; padding: 5px; cursor: pointer; border: 1px solid #ccc; text-align: center; background: white; }
-.btn-ejer.done { background: #c0ffc0; border-color: green; }
-.contenedor-teclado { background: #a0a0a0; padding: 8px; border-radius: 8px; }
-.tecla { height: 35px; min-width: 32px; border: 1px solid #555; background: #fff; font-size: 10px; display: flex; justify-content: center; align-items: center; }
+.lista-ejercicios { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin: 10px 0; }
+.btn-ejer { font-size: 11px; padding: 5px; cursor: pointer; border: 1px solid #999; text-align: center; background: white; }
+.btn-ejer.done { background: #c0ffc0; }
 </style>
 </head>
 <body>
 
 <div id="inicio">
     <h1>MecaMatic 3.0</h1>
-    <p>Nombre de Usuario: <input type="text" id="user-id"> <button onclick="login()">ENTRAR</button></p>
+    <p>Nombre: <input type="text" id="user-id"> <button onclick="login()">ENTRAR</button></p>
 </div>
 
 <div id="app" class="hidden">
-    <div class="menu-fases">
-        <button class="btn-fase active" id="fase-1" onclick="cambiarFase(1)">1. Aprendizaje</button>
-        <button class="btn-fase" id="fase-2" onclick="cambiarFase(2)">2. Práctica</button>
-        <button class="btn-fase" id="fase-3" onclick="cambiarFase(3)">3. Perfeccionamiento</button>
-    </div>
     <div class="contenedor-principal">
         <div class="columna-izquierda">
             <div class="pantalla-verde" onclick="document.getElementById('input-oculto').focus()">
                 <input type="text" id="input-oculto" oninput="procesar()" autocomplete="off">
-                <div id="contenido-ejercicio">Seleccione un ejercicio...</div>
+                <div id="contenido-ejercicio">Haz clic aquí y selecciona un ejercicio...</div>
             </div>
-            <div id="instruccion-dedo" style="text-align:center; color:red; font-weight:bold; margin:10px;">LISTO PARA COMENZAR</div>
-            <div class="contenedor-teclado">
-                <div style="display:flex; justify-content: center; gap:2px;">
-                    <div class="tecla">A</div><div class="tecla">S</div><div class="tecla">D</div><div class="tecla">F</div>
-                    <div class="tecla">J</div><div class="tecla">K</div><div class="tecla">L</div><div class="tecla">Ñ</div>
+
+            <div class="teclado-container">
+                <div class="fila-teclado">
+                    <div class="tecla m-izq">1</div><div class="tecla m-izq">2</div><div class="tecla a-izq">3</div><div class="tecla med-izq">4</div><div class="tecla i-izq">5</div><div class="tecla i-izq">6</div><div class="tecla i-der">7</div><div class="tecla i-der">8</div><div class="tecla med-der">9</div><div class="tecla a-der">0</div><div class="tecla m-der">'</div><div class="tecla m-der">¡</div>
+                </div>
+                <div class="fila-teclado">
+                    <div class="tecla tab">Tab</div><div class="tecla m-izq">Q</div><div class="tecla a-izq">W</div><div class="tecla med-izq">E</div><div class="tecla i-izq">R</div><div class="tecla i-izq">T</div><div class="tecla i-der">Y</div><div class="tecla i-der">U</div><div class="tecla med-der">I</div><div class="tecla a-der">O</div><div class="tecla m-der">P</div><div class="tecla m-der">`</div>
+                </div>
+                <div class="fila-teclado">
+                    <div class="tecla caps">Bloq</div><div class="tecla m-izq">A</div><div class="tecla a-izq">S</div><div class="tecla med-izq">D</div><div class="tecla i-izq">F</div><div class="tecla i-izq">G</div><div class="tecla i-der">H</div><div class="tecla i-der">J</div><div class="tecla med-der">K</div><div class="tecla a-der">L</div><div class="tecla m-der">Ñ</div><div class="tecla enter">Enter</div>
+                </div>
+                <div class="fila-teclado">
+                    <div class="tecla shift">Shift</div><div class="tecla m-izq">Z</div><div class="tecla a-izq">X</div><div class="tecla med-izq">C</div><div class="tecla i-izq">V</div><div class="tecla i-izq">B</div><div class="tecla i-der">N</div><div class="tecla i-der">M</div><div class="tecla med-der">,</div><div class="tecla a-der">.</div><div class="tecla m-der">-</div>
+                </div>
+                <div class="fila-teclado">
+                    <div class="tecla espacio"> </div>
                 </div>
             </div>
         </div>
+
         <div class="sidebar-derecha">
-            <h3 style="font-size: 14px; color: #008282;">LECCIONES</h3>
+            <button class="btn-fase active" onclick="cambiarFase(1)">1. APRENDIZAJE</button>
+            <button class="btn-fase" onclick="cambiarFase(2)">2. PRÁCTICA</button>
+            <button class="btn-fase" onclick="cambiarFase(3)">3. PERFECCIONAMIENTO</button>
             <div id="acordeon-lecciones"></div>
         </div>
     </div>
@@ -71,7 +109,7 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 
 <script>
 const BASE_URL_NUBE = "https://raw.githubusercontent.com/Jhonbonet/ejercicios/main/"; 
-let currentUser = "", faseActual = 1, ejercicioActual = 1, textoActivo = "", tInicio = null;
+let currentUser = "", faseActual = 1, textoActivo = "", ejercicioActual = 0;
 
 function login() {
     currentUser = document.getElementById('user-id').value;
@@ -83,12 +121,11 @@ function login() {
 
 function cambiarFase(num) {
     faseActual = num;
-    document.querySelectorAll('.btn-fase').forEach(b => b.classList.remove('active'));
-    document.getElementById(`fase-${num}`).classList.add('active');
-    renderizarMenuLecciones();
+    document.querySelectorAll('.btn-fase').forEach((b, i) => b.classList.toggle('active', i+1 === num));
+    renderizarMenu();
 }
 
-function renderizarMenuLecciones() {
+function renderizarMenu() {
     const contenedor = document.getElementById('acordeon-lecciones');
     contenedor.innerHTML = "";
     for(let l = 1; l <= 10; l++) {
@@ -111,29 +148,17 @@ function renderizarMenuLecciones() {
 
 async function cargarEjercicioNube(id) {
     const pantalla = document.getElementById('contenido-ejercicio');
-    pantalla.innerText = "Cargando archivo...";
+    pantalla.innerText = "Cargando...";
     try {
         const res = await fetch(`${BASE_URL_NUBE}${id}.txt?t=${new Date().getTime()}`);
-        if(!res.ok) throw new Error();
-        
         const buffer = await res.arrayBuffer();
-        
-        // CORRECCIÓN DEFINITIVA: 
-        // Forzamos la decodificación a Windows-1252 (ANSI) para recuperar la Ñ y tildes
-        const decoder = new TextDecoder('windows-1252');
-        let texto = decoder.decode(buffer);
-
-        // Limpieza de caracteres: quitamos saltos de línea Windows y espacios de control
-        textoActivo = texto.replace(/\r/g, "").trim();
-        
+        textoActivo = new TextDecoder('windows-1252').decode(buffer).replace(/\r/g, "").trim();
         ejercicioActual = id;
         document.getElementById('input-oculto').value = "";
-        tInicio = null;
         actualizarTablero(0);
         setTimeout(() => document.getElementById('input-oculto').focus(), 200);
-
     } catch (e) {
-        pantalla.innerHTML = `<span style="color:red">No se pudo cargar el ejercicio ${id}.txt</span>`;
+        pantalla.innerHTML = `<span style="color:red">Error al cargar lección ${id}</span>`;
     }
 }
 
@@ -150,20 +175,13 @@ function actualizarTablero(pos) {
 
 function procesar() {
     if (!textoActivo) return;
-    if (!tInicio) tInicio = new Date();
     const val = document.getElementById('input-oculto').value;
     actualizarTablero(val.length);
-    if (val.length >= textoActivo.length) finalizar();
-}
-
-function finalizar() {
-    const val = document.getElementById('input-oculto').value;
-    let err = 0;
-    for (let i = 0; i < textoActivo.length; i++) if (val[i] !== textoActivo[i]) err++;
-    localStorage.setItem(`${currentUser}_ex_${ejercicioActual}`, "1");
-    alert(`Ejercicio ${ejercicioActual}\nErrores: ${err}\nNetas: ${val.length - (err * 4)}`);
-    renderizarMenuLecciones();
-    document.getElementById('contenido-ejercicio').innerText = "Seleccione otro ejercicio...";
+    if (val.length >= textoActivo.length) {
+        localStorage.setItem(`${currentUser}_ex_${ejercicioActual}`, "1");
+        alert("¡Ejercicio Terminado!");
+        renderizarMenu();
+    }
 }
 </script>
 </body>
