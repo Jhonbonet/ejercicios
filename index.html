@@ -31,7 +31,6 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 .lista-ejercicios { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-bottom: 10px; }
 .btn-ejer { font-size: 10px; padding: 5px; cursor: pointer; border: 1px solid #ccc; text-align: center; background: white; }
 .btn-ejer.done { background: #c0ffc0; border-color: green; }
-#instruccion-dedo { text-align: center; font-weight: bold; color: red; font-size: 16px; }
 .contenedor-teclado { background: #a0a0a0; padding: 8px; border-radius: 8px; }
 .tecla { height: 35px; min-width: 32px; border: 1px solid #555; background: #fff; font-size: 10px; display: flex; justify-content: center; align-items: center; }
 </style>
@@ -55,7 +54,7 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
                 <input type="text" id="input-oculto" oninput="procesar()" autocomplete="off">
                 <div id="contenido-ejercicio">Seleccione un ejercicio...</div>
             </div>
-            <div id="instruccion-dedo">LISTO PARA COMENZAR</div>
+            <div id="instruccion-dedo" style="text-align:center; color:red; font-weight:bold; margin:10px;">LISTO PARA COMENZAR</div>
             <div class="contenedor-teclado">
                 <div style="display:flex; justify-content: center; gap:2px;">
                     <div class="tecla">A</div><div class="tecla">S</div><div class="tecla">D</div><div class="tecla">F</div>
@@ -117,21 +116,24 @@ async function cargarEjercicioNube(id) {
         const res = await fetch(`${BASE_URL_NUBE}${id}.txt?t=${new Date().getTime()}`);
         if(!res.ok) throw new Error();
         
-        const blob = await res.blob();
-        const reader = new FileReader();
+        const buffer = await res.arrayBuffer();
         
-        reader.onload = function(e) {
-            // Se usa windows-1252 para asegurar que lea la Ñ y acentos de archivos ANSI de Windows
-            textoActivo = e.target.result.replace(/\r/g, "").trim();
-            ejercicioActual = id;
-            document.getElementById('input-oculto').value = "";
-            tInicio = null;
-            actualizarTablero(0);
-            setTimeout(() => document.getElementById('input-oculto').focus(), 200);
-        };
-        
-        // Esta línea es la clave para corregir la Ñ
-        reader.readAsText(blob, 'windows-1252'); 
+        // Decodificamos primero en UTF-8
+        let decoderUTF8 = new TextDecoder('utf-8');
+        let texto = decoderUTF8.decode(buffer);
+
+        // Si detectamos el símbolo de error (), re-decodificamos en ISO-8859-1 (Windows/ANSI)
+        if (texto.includes('')) {
+            let decoderANSI = new TextDecoder('iso-8859-1');
+            texto = decoderANSI.decode(buffer);
+        }
+
+        textoActivo = texto.replace(/\r/g, "").trim();
+        ejercicioActual = id;
+        document.getElementById('input-oculto').value = "";
+        tInicio = null;
+        actualizarTablero(0);
+        setTimeout(() => document.getElementById('input-oculto').focus(), 200);
 
     } catch (e) {
         pantalla.innerHTML = `<span style="color:red">Error al cargar archivo ${id}.txt</span>`;
@@ -160,9 +162,7 @@ function procesar() {
 function finalizar() {
     const val = document.getElementById('input-oculto').value;
     let err = 0;
-    for (let i = 0; i < textoActivo.length; i++) {
-        if (val[i] !== textoActivo[i]) err++;
-    }
+    for (let i = 0; i < textoActivo.length; i++) if (val[i] !== textoActivo[i]) err++;
     localStorage.setItem(`${currentUser}_ex_${ejercicioActual}`, "1");
     alert(`Ejercicio ${ejercicioActual}\nErrores: ${err}\nNetas: ${val.length - (err * 4)}`);
     renderizarMenuLecciones();
