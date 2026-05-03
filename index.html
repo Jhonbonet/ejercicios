@@ -15,33 +15,29 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 #inicio, #app { width: 95%; max-width: 1100px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid #888; }
 .hidden { display: none; }
 
-/* PANTALLA DE TEXTO - MÁXIMA REDUCCIÓN DE ESPACIOS */
+/* PANTALLA DE TEXTO - CORRECCIÓN REBELDE */
 .pantalla-verde { 
-    font-size: 22px; 
+    font-size: 24px; /* Un poco más grande para llenar el espacio */
     background-color: var(--board-bg); 
     color: var(--text-untyped); 
     border: 4px inset #004d40; 
-    /* Padding en 0 para eliminar márgenes internos */
-    padding: 0px; 
-    min-height: 135px; 
+    padding: 2px 5px; /* Mínimo absoluto lateral y superior */
+    min-height: auto; /* Quitamos el alto mínimo para eliminar el vacío inferior */
     height: auto;      
     overflow: hidden; 
     letter-spacing: 1px; 
     white-space: pre-wrap; 
-    /* Ajuste de altura de línea para que el texto respire pero esté compacto */
-    line-height: 25px; 
+    line-height: 1.1; /* Pegamos las líneas entre sí */
     position: relative; 
-    margin-bottom: 10px; 
+    margin-bottom: 5px; 
     display: block; 
     cursor: text;
     word-wrap: break-word;
 }
 
-/* Contenedor del texto: Margen negativo para subirlo al tope y mínimo lateral */
 #contenido-ejercicio { 
     width: 100%; 
-    margin-top: -2px; 
-    margin-left: 4px; 
+    margin: 0;
     padding: 0;
 }
 
@@ -56,7 +52,7 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 .sidebar-derecha { flex: 1; background: #f0f0f0; border: 2px solid #008282; border-radius: 8px; padding: 10px; height: 85vh; overflow-y: auto; }
 
 /* TECLADO */
-.teclado-container { background: #999; padding: 12px; border-radius: 12px; border: 3px solid #444; user-select: none; margin-top: 10px; }
+.teclado-container { background: #999; padding: 12px; border-radius: 12px; border: 3px solid #444; user-select: none; margin-top: 5px; }
 .fila-teclado { display: flex; justify-content: center; gap: 3px; margin-bottom: 4px; }
 .tecla {
     width: 44px; height: 44px; background: white; border: 1px solid #000;
@@ -74,7 +70,6 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 .i-der { background-color: var(--index-r); } .med-der { background-color: var(--middle); }
 .a-der { background-color: var(--ring); } .m-der { background-color: var(--pinky); }
 
-/* MODAL HISTORIAL */
 #modal-historial {
     position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
     background: white; border: 3px solid #008282; padding: 20px; z-index: 1000;
@@ -84,7 +79,6 @@ table { width: 100%; border-collapse: collapse; margin-top: 10px; }
 th, td { border: 1px solid #888; padding: 8px; text-align: center; font-size: 12px; }
 th { background: #008282; color: white; }
 
-/* BOTONES MENU */
 .btn-fase { padding: 10px; cursor: pointer; border: 2px solid #008282; background: #ddd; font-weight: bold; margin-bottom: 5px; width: 100%; }
 .btn-fase.active { background: #008282; color: white; }
 .lista-ejercicios { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 15px; }
@@ -95,7 +89,7 @@ th { background: #008282; color: white; }
 <body onload="limpiarUsuariosAntiguos()">
 
 <div id="inicio">
-    <h1 style="color:#008282; text-align:center;">MecaMatic 4.0 ADN</h1>
+    <h1 style="color:#008282; text-align:center;">MecaMatic 4.0 ADN2</h1>
     <div style="text-align:center; padding: 20px; border: 2px dashed #008282;">
         <p>Progreso guardado automáticamente por 90 días.</p>
         <input type="text" id="user-id" placeholder="Nombre de Estudiante..." style="padding:8px; width:250px;">
