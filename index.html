@@ -10,13 +10,10 @@
     --guia: #ff0000; --board-bg: #008282; --text-untyped: #ffffff;
     --text-typed: #000000;
 }
-
 body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display: flex; flex-direction: column; align-items: center; padding: 5px; margin: 0; }
 #inicio, #app { width: 95%; max-width: 1100px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid #888; }
 .hidden { display: none; }
-
-.panel-info { display: flex; justify-content: space-between; background: #333; color: white; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 14px; }
-
+.panel-info { display: flex; justify-content: space-between; background: #333; color: white; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 14px; align-items: center; }
 .pantalla-verde { 
     font-size: 26px; background-color: var(--board-bg); color: var(--text-untyped); 
     border: 4px inset #004d40; padding: 15px; margin-bottom: 10px;
@@ -24,43 +21,30 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
     overflow: hidden; letter-spacing: 1px; white-space: pre-wrap; line-height: 1.2; 
     position: relative; cursor: text; word-wrap: break-word;
 }
-
 #input-oculto { position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; }
 .letra-hecha { color: var(--text-typed); opacity: 0.6; }
 .letra-guia { background-color: var(--guia); color: white !important; animation: blinker 0.6s linear infinite; }
-
 @keyframes blinker { 50% { opacity: 0.3; } }
 @keyframes blinker-key { 50% { background-color: #ff0000; color: white; transform: scale(1.05); } }
 .tecla-activa { animation: blinker-key 0.6s linear infinite !important; z-index: 10; border: 2px solid black !important; }
-
 .contenedor-principal { display: flex; gap: 15px; }
 .columna-izquierda { flex: 2.5; }
 .sidebar-derecha { flex: 1; background: #f0f0f0; border: 2px solid #008282; border-radius: 8px; padding: 10px; height: 75vh; overflow-y: auto; }
-
 .teclado-container { background: #444; padding: 12px; border-radius: 12px; border: 4px solid #222; user-select: none; }
 .fila-teclado { display: flex; justify-content: center; gap: 4px; margin-bottom: 5px; }
-.tecla {
-    width: 48px; height: 50px; background: white; border: 1px solid #000;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    font-weight: bold; font-size: 11px; border-radius: 6px; box-shadow: 2px 3px 0px #111;
-}
+.tecla { width: 48px; height: 50px; background: white; border: 1px solid #000; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: bold; font-size: 11px; border-radius: 6px; box-shadow: 2px 3px 0px #111; }
 .tecla.enter { width: 100px; background: #888; color: white; }
 .tecla.espacio { width: 350px; background: var(--thumb); }
-
-/* Colores de dedos se mantienen igual */
-.m-izq { background: var(--pinky); } .a-izq { background: var(--ring); }
-.med-izq { background: var(--middle); } .i-izq { background: var(--index-l); }
-.i-der { background: var(--index-r); } .med-der { background: var(--middle); }
-.a-der { background: var(--ring); } .m-der { background: var(--pinky); }
-
+.m-izq { background: var(--pinky); } .a-izq { background: var(--ring); } .med-izq { background: var(--middle); } .i-izq { background: var(--index-l); }
+.i-der { background: var(--index-r); } .med-der { background: var(--middle); } .a-der { background: var(--ring); } .m-der { background: var(--pinky); }
 .btn-fase { padding: 8px; cursor: pointer; border: 2px solid #008282; background: #ddd; font-weight: bold; width: 100%; margin-bottom: 5px; }
 .btn-fase.active { background: #008282; color: white; }
 .lista-ejercicios { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 15px; }
 .btn-ejer { font-size: 10px; padding: 5px; cursor: pointer; border: 1px solid #aaa; text-align: center; background: white; border-radius: 4px; }
 .btn-ejer.completado { background: #28a745 !important; color: white; font-weight: bold; }
-
-#modal-logros table { width: 100%; border-collapse: collapse; font-size: 12px; }
-#modal-logros th, #modal-logros td { border: 1px solid #888; padding: 6px; text-align: center; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+th, td { border: 1px solid #888; padding: 6px; text-align: center; }
+th { background: #008282; color: white; }
 </style>
 </head>
 <body>
@@ -78,9 +62,9 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
         <div>
             <button onclick="abrirLogros()" style="background:#008282; color:white; border:none; padding:5px 10px; cursor:pointer; font-weight:bold;">LOGROS</button>
             <button onclick="logout()" style="background:#d9534f; color:white; border:none; padding:5px 10px; cursor:pointer; font-weight:bold; margin-left:5px;">SALIR</button>
-            <span id="display-user" style="margin-left:10px;"></span>
+            <span id="display-user" style="margin-left:10px; font-weight:bold;"></span>
         </div>
-        <div>TIEMPO: <span id="timer">12:00</span></div>
+        <div style="font-size: 18px; color: #5cb85c;">TIEMPO: <span id="timer">00:00</span></div>
         <div>ERRORES: <span id="err-count">0</span>/5</div>
     </div>
 
@@ -88,32 +72,20 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
         <div class="columna-izquierda">
             <div class="pantalla-verde" onclick="document.getElementById('input-oculto').focus()">
                 <input type="text" id="input-oculto" oninput="procesar()" onkeydown="teclaEnter(event)" autocomplete="off">
-                <div id="contenido-ejercicio">Selecciona un ejercicio a la derecha...</div>
+                <div id="contenido-ejercicio">Selecciona un ejercicio para comenzar...</div>
             </div>
             <div id="instruccion-dedo" style="text-align:center; color:#333; font-weight:bold; margin-bottom:10px; font-size: 18px; min-height: 24px;"></div>
 
-            <div class="teclado-container">
+            <div class="teclado-container" id="teclado-visual">
                 <div class="fila-teclado">
-                    <div class="tecla m-izq" id="key-º">º</div>
-                    <div class="tecla m-izq" id="key-1">1</div>
-                    <div class="tecla m-izq" id="key-2">2</div>
-                    <div class="tecla a-izq" id="key-3">3</div>
-                    <div class="tecla med-izq" id="key-4">4</div>
-                    <div class="tecla i-izq" id="key-5">5</div>
-                    <div class="tecla i-izq" id="key-6">6</div>
-                    <div class="tecla i-der" id="key-7">7</div>
-                    <div class="tecla i-der" id="key-8">8</div>
-                    <div class="tecla med-der" id="key-9">9</div>
-                    <div class="tecla a-der" id="key-0">0</div>
-                    <div class="tecla m-der" id="key-'">'</div>
-                    <div class="tecla m-der" id="key-¡">¡</div>
+                    <div class="tecla m-izq" id="key-º">º</div><div class="tecla m-izq" id="key-1">1</div><div class="tecla m-izq" id="key-2">2</div><div class="tecla a-izq" id="key-3">3</div><div class="tecla med-izq" id="key-4">4</div><div class="tecla i-izq" id="key-5">5</div><div class="tecla i-izq" id="key-6">6</div><div class="tecla i-der" id="key-7">7</div><div class="tecla i-der" id="key-8">8</div><div class="tecla med-der" id="key-9">9</div><div class="tecla a-der" id="key-0">0</div><div class="tecla m-der" id="key-'">'</div><div class="tecla m-der" id="key-¡">¡</div>
                 </div>
                 <div class="fila-teclado">
-                    <div class="tecla" style="width:60px">Tab</div>
+                    <div class="tecla" style="width:60px">TAB</div>
                     <div class="tecla m-izq" id="key-Q">Q</div><div class="tecla a-izq" id="key-W">W</div><div class="tecla med-izq" id="key-E">E</div><div class="tecla i-izq" id="key-R">R</div><div class="tecla i-izq" id="key-T">T</div><div class="tecla i-der" id="key-Y">Y</div><div class="tecla i-der" id="key-U">U</div><div class="tecla med-der" id="key-I">I</div><div class="tecla a-der" id="key-O">O</div><div class="tecla m-der" id="key-P">P</div><div class="tecla m-der" id="key-^">^</div><div class="tecla m-der" id="key-*">*</div>
                 </div>
                 <div class="fila-teclado">
-                    <div class="tecla" style="width:80px">Bloq M</div>
+                    <div class="tecla" style="width:80px">BLOQ</div>
                     <div class="tecla m-izq" id="key-A">A</div><div class="tecla a-izq" id="key-S">S</div><div class="tecla med-izq" id="key-D">D</div><div class="tecla i-izq" id="key-F">F</div><div class="tecla i-izq" id="key-G">G</div><div class="tecla i-der" id="key-H">H</div><div class="tecla i-der" id="key-J">J</div><div class="tecla med-der" id="key-K">K</div><div class="tecla a-der" id="key-L">L</div><div class="tecla m-der" id="key-Ñ">Ñ</div><div class="tecla m-der" id="key-¨">¨</div>
                     <div class="tecla enter" id="key-ENTER">ENTER</div>
                 </div>
@@ -138,39 +110,46 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 </div>
 
 <div id="modal-logros" class="hidden" style="position:fixed; background:rgba(0,0,0,0.8); top:0; left:0; width:100%; height:100%; z-index:1000; display:none;">
-    <div style="background:white; margin:50px auto; width:90%; max-width:800px; padding:20px; border-radius:10px; max-height:80vh; overflow-y:auto;">
-        <h2 style="color:#008282; margin-top:0;">HISTORIAL DE LOGROS</h2>
-        <div id="tabla-cont">
-            <table>
-                <thead>
-                    <tr><th>Ejer</th><th>PPM Brutas</th><th>PPM Netas</th><th>Error</th><th>Precisión</th><th>Fecha</th></tr>
-                </thead>
-                <tbody id="lista-logros-body"></tbody>
-            </table>
-        </div>
-        <button onclick="cerrarLogros()" style="width:100%; padding:12px; margin-top:15px; background:#444; color:white; border:none; cursor:pointer; font-weight:bold;">CERRAR VENTANA</button>
+    <div style="background:white; margin:50px auto; width:90%; max-width:850px; padding:20px; border-radius:10px; max-height:80vh; overflow-y:auto;">
+        <h2 style="color:#008282;">HISTORIAL DE PROGRESO</h2>
+        <table id="tabla-logros">
+            <thead>
+                <tr><th>Ejer</th><th>PPM Brutas</th><th>PPM Netas</th><th>Errores</th><th>Precisión</th><th>Fecha</th></tr>
+            </thead>
+            <tbody id="lista-logros-body"></tbody>
+        </table>
+        <button onclick="cerrarLogros()" style="width:100%; padding:12px; margin-top:15px; background:#444; color:white; border:none; cursor:pointer;">CERRAR</button>
     </div>
 </div>
 
 <script>
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx06fFp8LrUC-8XN3iEBaPtFW_dJCmp_5Tx2VlBsoP0wQwoiHv7tGfw2-AEcpVeU-spSQ/exec";
+const WEB_APP_URL = "TU_URL_DE_GOOGLE_SCRIPT_AQUI"; // REEMPLAZAR ESTO
 const BASE_URL_NUBE = "https://raw.githubusercontent.com/Jhonbonet/ejercicios/main/"; 
 
 let currentUser = "", faseActual = 1, textoActivo = "", ejercicioActual = 0;
 let erroresContador = 0, tInicio = null, esperandoInicio = false;
-let timerSecs = 720, timerInterval = null;
+let timerSecs = 0, timerInterval = null, audioCtx = null;
 let progresoCargado = {};
 
-const mapaDedos = { 'q':'MEÑIQUE IZQ', 'a':'MEÑIQUE IZQ', 'z':'MEÑIQUE IZQ', '1':'MEÑIQUE IZQ', 'º':'MEÑIQUE IZQ', '<':'MEÑIQUE IZQ', 'w':'ANULAR IZQ', 's':'ANULAR IZQ', 'x':'ANULAR IZQ', '2':'ANULAR IZQ', 'e':'MEDIO IZQ', 'd':'MEDIO IZQ', 'c':'MEDIO IZQ', '3':'MEDIO IZQ', 'r':'ÍNDICE IZQ', 'f':'ÍNDICE IZQ', 'v':'ÍNDICE IZQ', '4':'ÍNDICE IZQ', 't':'ÍNDICE IZQ', 'g':'ÍNDICE IZQ', 'b':'ÍNDICE IZQ', '5':'ÍNDICE IZQ', 'y':'ÍNDICE DER', 'h':'ÍNDICE DER', 'n':'ÍNDICE DER', '6':'ÍNDICE DER', 'u':'ÍNDICE DER', 'j':'ÍNDICE DER', 'm':'ÍNDICE DER', '7':'ÍNDICE DER', 'i':'MEDIO DER', 'k':'MEDIO DER', ',':'MEDIO DER', '8':'MEDIO DER', 'o':'ANULAR DER', 'l':'ANULAR DER', '.':'ANULAR DER', '9':'ANULAR DER', 'p':'MEÑIQUE DER', 'ñ':'MEÑIQUE DER', '-':'MEÑIQUE DER', '0':'MEÑIQUE DER', '¡':'MEÑIQUE DER', "'":'MEÑIQUE DER', ' ':'PULGAR' };
+const mapaDedos = { 'q':'MEÑIQUE IZQ', 'a':'MEÑIQUE IZQ', 'z':'MEÑIQUE IZQ', '1':'MEÑIQUE IZQ', 'w':'ANULAR IZQ', 's':'ANULAR IZQ', 'x':'ANULAR IZQ', '2':'ANULAR IZQ', 'e':'MEDIO IZQ', 'd':'MEDIO IZQ', 'c':'MEDIO IZQ', '3':'MEDIO IZQ', 'r':'ÍNDICE IZQ', 'f':'ÍNDICE IZQ', 'v':'ÍNDICE IZQ', '4':'ÍNDICE IZQ', 't':'ÍNDICE IZQ', 'g':'ÍNDICE IZQ', 'b':'ÍNDICE IZQ', '5':'ÍNDICE IZQ', 'y':'ÍNDICE DER', 'h':'ÍNDICE DER', 'n':'ÍNDICE DER', '6':'ÍNDICE DER', 'u':'ÍNDICE DER', 'j':'ÍNDICE DER', 'm':'ÍNDICE DER', '7':'ÍNDICE DER', 'i':'MEDIO DER', 'k':'MEDIO DER', ',':'MEDIO DER', '8':'MEDIO DER', 'o':'ANULAR DER', 'l':'ANULAR DER', '.':'ANULAR DER', '9':'ANULAR DER', 'p':'MEÑIQUE DER', 'ñ':'MEÑIQUE DER', '0':'MEÑIQUE DER', ' ':'PULGAR' };
+
+function iniciarAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+function sonar(frec, tipo, dur) {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+    osc.type = tipo; osc.frequency.setValueAtTime(frec, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + dur);
+}
 
 function login() {
     currentUser = document.getElementById('user-id').value.trim().toUpperCase();
     if(!currentUser) return alert("Ingresa tu nombre");
-    
-    // Cargar progreso del navegador (localStorage)
+    iniciarAudio();
     const saved = localStorage.getItem('mecamatic_v4_' + currentUser);
     progresoCargado = saved ? JSON.parse(saved) : {};
-
     document.getElementById('display-user').innerText = "ESTUDIANTE: " + currentUser;
     document.getElementById('inicio').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
@@ -194,63 +173,65 @@ function renderizarMenu() {
         for(let e=1; e<=10; e++) {
             let id = ((faseActual-1)*100) + ((l-1)*10) + e;
             let esCompletado = progresoCargado[id] ? "completado" : "";
-            grid.innerHTML += `<div class="btn-ejer ${esCompletado}" id="ejer-${id}" onclick="cargarEjercicio(${id})">${e}</div>`;
+            grid.innerHTML += `<div class="btn-ejer ${esCompletado}" id="ejer-${id}" onclick="cargarEjercicio(${id}, ${l})">${e}</div>`;
         }
         cont.appendChild(grid);
     }
 }
 
-async function cargarEjercicio(id) {
+async function cargarEjercicio(id, numLeccion) {
     try {
         const res = await fetch(`${BASE_URL_NUBE}${id}.txt`);
         const buffer = await res.arrayBuffer();
         textoActivo = new TextDecoder('windows-1252').decode(buffer).replace(/\r/g, "").trim();
         ejercicioActual = id; erroresContador = 0;
         document.getElementById('err-count').innerText = "0";
-        document.getElementById('contenido-ejercicio').innerHTML = "<span style='color:red; font-weight:bold;'>PRESIONA [ENTER] PARA COMENZAR</span>";
+        document.getElementById('contenido-ejercicio').innerHTML = "<span style='color:red;'>PULSE [ENTER]</span>";
         
-        clearInterval(timerInterval);
-        timerSecs = 720;
-        document.getElementById('timer').innerText = "12:00";
+        // Lógica de tiempo solicitada
+        if (faseActual === 1) {
+            timerSecs = numLeccion <= 5 ? 720 : 420; // 12 min o 7 min
+        } else {
+            timerSecs = 600; // 10 min por defecto para otras fases
+        }
+        
+        actualizarReloj();
         esperandoInicio = true; document.getElementById('input-oculto').focus();
         resaltarTecla("ENTER");
-    } catch(e) { alert("Error al cargar ejercicio."); }
+    } catch(e) { alert("Error cargando lección."); }
 }
 
 function teclaEnter(e) {
     if(esperandoInicio && e.key === "Enter") {
-        esperandoInicio = false; 
-        document.getElementById('input-oculto').value = "";
-        tInicio = new Date(); 
-        iniciarTimer();
-        actualizarTablero(0);
+        esperandoInicio = false; document.getElementById('input-oculto').value = "";
+        tInicio = new Date(); iniciarTimer(); actualizarTablero(0);
+        sonar(600, 'sine', 0.1);
     }
 }
 
 function iniciarTimer() {
+    clearInterval(timerInterval);
     timerInterval = setInterval(() => {
-        timerSecs--;
-        let m = Math.floor(timerSecs / 60);
-        let s = timerSecs % 60;
-        document.getElementById('timer').innerText = `${m}:${s < 10 ? '0'+s : s}`;
+        timerSecs--; actualizarReloj();
         if(timerSecs <= 0) {
             clearInterval(timerInterval);
-            alert("TIEMPO AGOTADO. Vuelve a intentarlo.");
-            cargarEjercicio(ejercicioActual);
+            sonar(150, 'sawtooth', 0.5);
+            alert("TIEMPO AGOTADO"); logout();
         }
     }, 1000);
 }
 
+function actualizarReloj() {
+    let m = Math.floor(timerSecs / 60); let s = timerSecs % 60;
+    document.getElementById('timer').innerText = `${m}:${s < 10 ? '0'+s : s}`;
+}
+
 function resaltarTecla(char) {
     document.querySelectorAll('.tecla').forEach(t => t.classList.remove('tecla-activa'));
-    if(char === "ENTER") { document.getElementById('key-ENTER').classList.add('tecla-activa'); return; }
-    const idFinal = char.toUpperCase();
-    const tecla = document.getElementById('key-' + idFinal);
+    let id = char.toUpperCase();
+    if(char === "ENTER") id = "ENTER";
+    const tecla = document.getElementById('key-' + id);
     if(tecla) tecla.classList.add('tecla-activa');
-    if(/[A-Z]/.test(char) || "!\"·$%&/()=?¿ª".includes(char)) {
-        document.getElementById('key-SHIFT-L').classList.add('tecla-activa');
-        document.getElementById('key-SHIFT-R').classList.add('tecla-activa');
-    }
 }
 
 function actualizarTablero(pos) {
@@ -272,62 +253,50 @@ function procesar() {
     if(esperandoInicio) return;
     const input = document.getElementById('input-oculto');
     let val = input.value; let pos = val.length - 1;
+    
     if(val[pos] === textoActivo[pos]) {
+        sonar(400, 'triangle', 0.03); // Sonido teclado
         actualizarTablero(val.length);
         if(val.length >= textoActivo.length) finalizar();
     } else {
+        sonar(100, 'square', 0.15); // Sonido error
         erroresContador++;
         document.getElementById('err-count').innerText = erroresContador;
         input.value = val.substring(0, pos);
-        if(erroresContador > 5) {
-            clearInterval(timerInterval);
-            alert("VUELVA A REPETIR EL EJERCICIO (Máximo de errores superado)");
-            cargarEjercicio(ejercicioActual);
-        }
+        if(erroresContador > 5) { alert("REPETIR EJERCICIO"); location.reload(); }
     }
 }
 
 function finalizar() {
     clearInterval(timerInterval);
-    const tFinal = (new Date() - tInicio) / 60000;
+    const tMin = (new Date() - tInicio) / 60000;
     const pBrutas = textoActivo.length;
-    const ppmBrutas = Math.round(pBrutas / tFinal);
-    const ppmNetas = Math.round((pBrutas - (erroresContador * 4)) / tFinal);
-    const precision = ((pBrutas - erroresContador) / pBrutas * 100).toFixed(2);
+    const ppmB = Math.round(pBrutas / tMin);
+    const ppmN = Math.round((pBrutas - (erroresContador * 4)) / tMin);
+    const prec = ((pBrutas - erroresContador) / pBrutas * 100).toFixed(2);
     const fecha = new Date().toLocaleDateString();
 
-    const result = { ppmB: ppmBrutas, ppmN: ppmNetas, err: erroresContador, prec: precision, fecha: fecha };
-    
-    // Guardar en local
+    const result = { ppmB, ppmN, err: erroresContador, prec, fecha };
     progresoCargado[ejercicioActual] = result;
     localStorage.setItem('mecamatic_v4_' + currentUser, JSON.stringify(progresoCargado));
-    document.getElementById(`ejer-${ejercicioActual}`).classList.add('completado');
-
-    alert(`¡FELICIDADES!\nEstadísticas:\n- PPM Brutas: ${ppmBrutas}\n- PPM Netas: ${ppmNetas}\n- Precisión: ${precision}%`);
-
-    // Enviar a la hoja de cálculo
-    const params = `?action=save&user=${encodeURIComponent(currentUser)}&ejercicio=${ejercicioActual}&ppm=${ppmNetas}&errores=${erroresContador}&fecha=${encodeURIComponent(fecha)}&prec=${precision}`;
     
-    // Método infalible para Apps Script: Inyectar un elemento invisible
-    const img = new Image();
-    img.src = WEB_APP_URL + params;
+    // GUARDAR EN GOOGLE SHEETS
+    const params = `?action=save&user=${encodeURIComponent(currentUser)}&ejercicio=${ejercicioActual}&ppm_brutas=${ppmB}&ppm_netas=${ppmN}&errores=${erroresContador}&precision=${prec}&fecha=${encodeURIComponent(fecha)}`;
+    new Image().src = WEB_APP_URL + params;
+
+    alert(`¡EXCELENTE!\nNetas: ${ppmN} PPM\nPrecisión: ${prec}%`);
+    cambiarFase(faseActual);
 }
 
 function abrirLogros() {
     const body = document.getElementById('lista-logros-body');
     body.innerHTML = "";
-    const ids = Object.keys(progresoCargado).sort((a,b) => a-b);
-    if(ids.length === 0) {
-        body.innerHTML = "<tr><td colspan='6'>Sin logros registrados en este navegador.</td></tr>";
-    } else {
-        ids.forEach(id => {
-            let log = progresoCargado[id];
-            body.innerHTML += `<tr><td>${id}</td><td>${log.ppmB}</td><td>${log.ppmN}</td><td>${log.err}</td><td>${log.prec}%</td><td>${log.fecha}</td></tr>`;
-        });
-    }
+    Object.keys(progresoCargado).forEach(id => {
+        let log = progresoCargado[id];
+        body.innerHTML += `<tr><td>${id}</td><td>${log.ppmB}</td><td>${log.ppmN}</td><td>${log.err}</td><td>${log.prec}%</td><td>${log.fecha}</td></tr>`;
+    });
     document.getElementById('modal-logros').style.display = 'block';
 }
-
 function cerrarLogros() { document.getElementById('modal-logros').style.display = 'none'; }
 </script>
 </body>
