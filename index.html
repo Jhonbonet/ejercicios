@@ -17,53 +17,46 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 
 .pantalla-verde { 
     font-size: 26px; background-color: var(--board-bg); color: var(--text-untyped); 
-    border: 4px inset #004d40; padding: 10px; margin-bottom: 10px;
-    height: auto; min-height: 60px; display: flex; align-items: flex-start;
-    overflow: hidden; letter-spacing: 1px; white-space: pre-wrap; line-height: 1.1; 
+    border: 4px inset #004d40; padding: 15px; margin-bottom: 10px;
+    height: auto; min-height: 80px; display: flex; align-items: flex-start;
+    overflow: hidden; letter-spacing: 1px; white-space: pre-wrap; line-height: 1.2; 
     position: relative; cursor: text; word-wrap: break-word;
 }
 
 #input-oculto { position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; }
-.letra-hecha { color: var(--text-typed); opacity: 0.7; }
+.letra-hecha { color: var(--text-typed); opacity: 0.6; }
 .letra-guia { background-color: var(--guia); color: white !important; animation: blinker 0.6s linear infinite; }
 
 @keyframes blinker { 50% { opacity: 0.3; } }
-@keyframes blinker-key { 50% { background-color: #ff0000; color: white; transform: scale(1.05); } }
+@keyframes blinker-key { 50% { background-color: #ff0000; color: white; transform: scale(1.02); } }
 
-.tecla-activa { animation: blinker-key 0.6s linear infinite !important; z-index: 10; border: 2px solid black !important; }
+.tecla-activa { animation: blinker-key 0.6s linear infinite !important; z-index: 10; border: 2px solid black !important; box-shadow: 0 0 10px red !important; }
 
-/* LAYOUT */
 .contenedor-principal { display: flex; gap: 15px; }
 .columna-izquierda { flex: 2.5; }
-.sidebar-derecha { flex: 1; background: #f0f0f0; border: 2px solid #008282; border-radius: 8px; padding: 10px; height: 85vh; overflow-y: auto; }
+.sidebar-derecha { flex: 1; background: #f0f0f0; border: 2px solid #008282; border-radius: 8px; padding: 10px; height: 80vh; overflow-y: auto; }
 
-/* TECLADO MEJORADO */
 .teclado-container { background: #444; padding: 12px; border-radius: 12px; border: 4px solid #222; user-select: none; }
 .fila-teclado { display: flex; justify-content: center; gap: 4px; margin-bottom: 5px; }
 .tecla {
     width: 48px; height: 50px; background: white; border: 1px solid #000;
     display: flex; flex-direction: column; justify-content: center; align-items: center;
     font-weight: bold; font-size: 11px; border-radius: 6px; box-shadow: 2px 3px 0px #111;
-    position: relative; transition: 0.1s;
+    position: relative;
 }
 .tecla span.sup { font-size: 10px; color: #555; margin-bottom: -2px; }
 .tecla.tab { width: 70px; } .tecla.caps { width: 85px; } .tecla.enter { width: 100px; background: #888; color: white; }
 .tecla.shift-l, .tecla.shift-r { width: 115px; } .tecla.espacio { width: 350px; background: var(--thumb); }
 
-/* COLORES DEDOS */
 .m-izq { background: var(--pinky); } .a-izq { background: var(--ring); }
 .med-izq { background: var(--middle); } .i-izq { background: var(--index-l); }
 .i-der { background: var(--index-r); } .med-der { background: var(--middle); }
 .a-der { background: var(--ring); } .m-der { background: var(--pinky); }
 
-table { width: 100%; border-collapse: collapse; }
-th, td { border: 1px solid #888; padding: 6px; text-align: center; }
-th { background: #008282; color: white; }
 .btn-fase { padding: 10px; cursor: pointer; border: 2px solid #008282; background: #ddd; font-weight: bold; width: 100%; margin-bottom: 5px; }
 .btn-fase.active { background: #008282; color: white; }
 .lista-ejercicios { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 15px; }
 .btn-ejer { font-size: 10px; padding: 5px; cursor: pointer; border: 1px solid #aaa; text-align: center; background: white; }
-.btn-ejer.done { background: #c0ffc0; border: 2px solid #008282; }
 </style>
 </head>
 <body>
@@ -78,21 +71,15 @@ th { background: #008282; color: white; }
 
 <div id="app" class="hidden">
     <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <div>
-            <button onclick="mostrarHistorial()" style="background:#444; color:white; padding:8px 15px; border:none; cursor:pointer; border-radius:4px;">LOGROS</button>
-            <button onclick="logout()" style="background:#d9534f; color:white; padding:8px 15px; border:none; cursor:pointer; border-radius:4px; margin-left: 5px;">SALIR</button>
-        </div>
-        <div>
-            <span id="display-user" style="font-weight:bold; color:#008282;"></span>
-            <span id="stats-live" style="margin-left:20px; font-weight:bold; color:#d9534f;">Errores: <span id="err-count">0</span>/5</span>
-        </div>
+        <div><span id="display-user" style="font-weight:bold; color:#008282;"></span></div>
+        <div style="font-weight:bold; color:#d9534f;">Errores: <span id="err-count">0</span>/5</div>
     </div>
 
     <div class="contenedor-principal">
         <div class="columna-izquierda">
             <div class="pantalla-verde" onclick="document.getElementById('input-oculto').focus()">
                 <input type="text" id="input-oculto" oninput="procesar()" onkeydown="teclaEnter(event)" autocomplete="off">
-                <div id="contenido-ejercicio">Selecciona una lección a la derecha...</div>
+                <div id="contenido-ejercicio">Selecciona una lección a la derecha para cargar el texto...</div>
             </div>
 
             <div id="instruccion-dedo" style="text-align:center; color:#333; font-weight:bold; margin-bottom:10px; font-size: 18px; min-height: 24px;"></div>
@@ -159,14 +146,6 @@ th { background: #008282; color: white; }
     </div>
 </div>
 
-<div id="modal-historial" class="hidden" style="position:fixed; background:rgba(0,0,0,0.8); top:0; left:0; width:100%; height:100%; z-index:1000;">
-    <div style="background:white; margin:5% auto; width:80%; padding:20px; border-radius:8px;">
-        <h2>Tu Historial en la Nube</h2>
-        <div id="cuerpo-historial"></div>
-        <button onclick="document.getElementById('modal-historial').classList.add('hidden')" style="width:100%; padding:10px; margin-top:10px;">CERRAR</button>
-    </div>
-</div>
-
 <script>
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx06fFp8LrUC-8XN3iEBaPtFW_dJCmp_5Tx2VlBsoP0wQwoiHv7tGfw2-AEcpVeU-spSQ/exec";
 const BASE_URL_NUBE = "https://raw.githubusercontent.com/Jhonbonet/ejercicios/main/"; 
@@ -174,16 +153,26 @@ const BASE_URL_NUBE = "https://raw.githubusercontent.com/Jhonbonet/ejercicios/ma
 let currentUser = "", faseActual = 1, textoActivo = "", ejercicioActual = 0;
 let erroresContador = 0, tInicio = null, esperandoInicio = false;
 
-const ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
+// Configuración de Audio
+let audioCtx = null;
+function iniciarAudio() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+}
 
-function sonido(frec, tipo, dur) {
-    const osc = ctxAudio.createOscillator();
-    const gain = ctxAudio.createGain();
-    osc.type = tipo; osc.frequency.value = frec;
-    gain.gain.setValueAtTime(0.1, ctxAudio.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, ctxAudio.currentTime + dur);
-    osc.connect(gain); gain.connect(ctxAudio.destination);
-    osc.start(); osc.stop(ctxAudio.currentTime + dur);
+function sonar(frec, tipo, dur) {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = tipo;
+    osc.frequency.setValueAtTime(frec, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + dur);
 }
 
 const simbolosShift = {
@@ -204,23 +193,26 @@ const mapaDedos = {
 };
 
 function login() {
-    currentUser = document.getElementById('user-id').value.trim().toLowerCase();
+    currentUser = document.getElementById('user-id').value.trim();
     if(!currentUser) return alert("Ingresa tu nombre");
+    iniciarAudio(); // Activa el audio tras interacción
     document.getElementById('display-user').innerText = "ESTUDIANTE: " + currentUser.toUpperCase();
     document.getElementById('inicio').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
     cambiarFase(1);
 }
 
-function logout() { location.reload(); }
-
-function cambiarFase(n) { faseActual = n; renderizarMenu(); }
+function cambiarFase(n) {
+    faseActual = n;
+    document.querySelectorAll('.btn-fase').forEach((b, i) => b.classList.toggle('active', i+1 === n));
+    renderizarMenu();
+}
 
 function renderizarMenu() {
     const cont = document.getElementById('acordeon-lecciones');
     cont.innerHTML = "";
     for(let l=1; l<=10; l++) {
-        cont.innerHTML += `<div style="background:#008282; color:white; padding:5px; font-size:12px; margin-top:5px;">LECCIÓN ${l}</div>`;
+        cont.innerHTML += `<div style="background:#008282; color:white; padding:5px; font-size:12px; margin-top:5px; font-weight:bold;">LECCIÓN ${l}</div>`;
         let grid = document.createElement('div'); grid.className = "lista-ejercicios";
         for(let e=1; e<=10; e++) {
             let id = ((faseActual-1)*100) + ((l-1)*10) + e;
@@ -238,10 +230,11 @@ async function cargarEjercicio(id) {
         ejercicioActual = id;
         erroresContador = 0;
         document.getElementById('err-count').innerText = "0";
-        document.getElementById('contenido-ejercicio').innerHTML = "<span style='color:red'>PRESIONA [ENTER] PARA COMENZAR</span>";
+        document.getElementById('contenido-ejercicio').innerHTML = "<span style='color:red; font-weight:bold;'>PRESIONA [ENTER] PARA COMENZAR</span>";
         esperandoInicio = true;
+        document.getElementById('input-oculto').focus();
         resaltarTecla("ENTER");
-    } catch(e) { alert("Error al cargar texto"); }
+    } catch(e) { alert("Error al cargar ejercicio."); }
 }
 
 function teclaEnter(e) {
@@ -250,6 +243,7 @@ function teclaEnter(e) {
         document.getElementById('input-oculto').value = "";
         tInicio = new Date();
         actualizarTablero(0);
+        sonar(800, 'sine', 0.1); // Sonido de inicio
     }
 }
 
@@ -261,19 +255,19 @@ function resaltarTecla(char) {
         return;
     }
 
-    let teclaID = char.toUpperCase();
-    let necesitaShift = false;
+    let idFinal = char.toUpperCase();
+    let usaShift = false;
 
-    if(/[A-Z]/.test(char)) necesitaShift = true;
+    if(/[A-Z]/.test(char)) usaShift = true;
     if(simbolosShift[char]) {
-        teclaID = simbolosShift[char];
-        necesitaShift = true;
+        idFinal = simbolosShift[char];
+        usaShift = true;
     }
 
-    const el = document.getElementById('key-' + teclaID);
-    if(el) el.classList.add('tecla-activa');
+    const tecla = document.getElementById('key-' + idFinal);
+    if(tecla) tecla.classList.add('tecla-activa');
 
-    if(necesitaShift) {
+    if(usaShift) {
         document.getElementById('key-SHIFT-L').classList.add('tecla-activa');
         document.getElementById('key-SHIFT-R').classList.add('tecla-activa');
     }
@@ -302,31 +296,30 @@ function procesar() {
     let pos = val.length - 1;
 
     if(val[pos] === textoActivo[pos]) {
-        sonido(600, 'sine', 0.05); // Sonido teclado
+        sonar(500, 'triangle', 0.05); // Sonido teclado (Tick)
         actualizarTablero(val.length);
         if(val.length >= textoActivo.length) finalizar();
     } else {
-        sonido(150, 'sawtooth', 0.2); // Sonido error
+        sonar(120, 'sawtooth', 0.2); // Sonido Error (Buzz)
         erroresContador++;
         document.getElementById('err-count').innerText = erroresContador;
         input.value = val.substring(0, pos);
         if(erroresContador > 5) {
-            alert("Máximo de errores. Reintenta.");
+            alert("Exceso de errores. Reiniciando...");
             cargarEjercicio(ejercicioActual);
         }
     }
 }
 
-async function finalizar() {
+function finalizar() {
     const ppm = Math.round(textoActivo.length / ((new Date() - tInicio)/60000));
-    alert(`¡Completado! Velocidad: ${ppm} PPM`);
+    alert(`¡Ejercicio Finalizado!\nVelocidad: ${ppm} PPM\nErrores: ${erroresContador}`);
     
-    const log = { action: 'save', user: currentUser, ejercicio: ejercicioActual, ppm: ppm, fecha: new Date().toLocaleDateString() };
-    fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(log) });
-}
-
-function mostrarHistorial() {
-    alert("Progreso guardado en Google Sheets. Consulta a tu tutor.");
+    fetch(WEB_APP_URL, { 
+        method: 'POST', 
+        mode: 'no-cors', 
+        body: JSON.stringify({ action: 'save', user: currentUser, ejercicio: ejercicioActual, ppm: ppm }) 
+    });
 }
 </script>
 </body>
