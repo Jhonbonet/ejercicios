@@ -13,12 +13,9 @@
 body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display: flex; flex-direction: column; align-items: center; padding: 10px; margin: 0; }
 #inicio, #app { width: 95%; max-width: 1200px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 .hidden { display: none; }
-
 .contenedor-principal { display: flex; gap: 15px; height: 80vh; }
 .columna-izquierda { flex: 2.5; display: flex; flex-direction: column; gap: 10px; }
-
 .sidebar-derecha { flex: 1; background: #f4f4f4; border: 2px solid #008282; border-radius: 8px; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-
 .pantalla-verde { 
     font-size: 24px; background-color: var(--board-bg); color: var(--text-untyped); 
     border: 3px solid #004d40; padding: 15px; height: 120px; overflow: hidden; 
@@ -28,20 +25,15 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 .letra-hecha { color: var(--text-typed); }
 .letra-guia { background-color: var(--guia); color: white !important; animation: blinker 0.8s linear infinite; }
 @keyframes blinker { 50% { opacity: 0; } }
-
 .menu-fases { display: flex; gap: 5px; margin-bottom: 10px; }
 .btn-fase { padding: 8px; cursor: pointer; flex: 1; border: 1px solid #008282; background: white; font-weight: bold; }
 .btn-fase.active { background: #008282; color: white; }
-
 .lista-ejercicios { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-bottom: 10px; }
 .btn-ejer { font-size: 10px; padding: 5px; cursor: pointer; border: 1px solid #ccc; text-align: center; background: white; }
 .btn-ejer.done { background: #c0ffc0; border-color: green; }
-.btn-ejer.active { background: #ffc0c0; border-color: red; }
-
 #instruccion-dedo { text-align: center; font-weight: bold; color: red; font-size: 16px; }
 .contenedor-teclado { background: #a0a0a0; padding: 8px; border-radius: 8px; }
 .tecla { height: 35px; min-width: 32px; border: 1px solid #555; background: #fff; font-size: 10px; display: flex; justify-content: center; align-items: center; }
-.active-tecla { background-color: var(--guia) !important; color: white !important; }
 </style>
 </head>
 <body>
@@ -57,51 +49,34 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
         <button class="btn-fase" id="fase-2" onclick="cambiarFase(2)">2. Práctica</button>
         <button class="btn-fase" id="fase-3" onclick="cambiarFase(3)">3. Perfeccionamiento</button>
     </div>
-
     <div class="contenedor-principal">
         <div class="columna-izquierda">
             <div class="pantalla-verde" onclick="document.getElementById('input-oculto').focus()">
                 <input type="text" id="input-oculto" oninput="procesar()" autocomplete="off">
-                <div id="contenido-ejercicio">Seleccione un ejercicio del panel derecho...</div>
+                <div id="contenido-ejercicio">Seleccione un ejercicio...</div>
             </div>
             <div id="instruccion-dedo">LISTO PARA COMENZAR</div>
-            <div class="contenedor-teclado" id="teclado-visual">
+            <div class="contenedor-teclado">
                 <div style="display:flex; justify-content: center; gap:2px;">
-                    <div class="tecla" id="K-A">A</div><div class="tecla" id="K-S">S</div><div class="tecla" id="K-D">D</div><div class="tecla" id="K-F">F</div>
-                    <div class="tecla" id="K-J">J</div><div class="tecla" id="K-K">K</div><div class="tecla" id="K-L">L</div><div class="tecla" id="K-Ñ">Ñ</div>
+                    <div class="tecla">A</div><div class="tecla">S</div><div class="tecla">D</div><div class="tecla">F</div>
+                    <div class="tecla">J</div><div class="tecla">K</div><div class="tecla">L</div><div class="tecla">Ñ</div>
                 </div>
             </div>
         </div>
-
         <div class="sidebar-derecha">
-            <h3 style="font-size: 14px; color: #008282;">LECCIONES (10 EJERCICIOS C/U)</h3>
+            <h3 style="font-size: 14px; color: #008282;">LECCIONES</h3>
             <div id="acordeon-lecciones"></div>
-            <hr>
-            <div id="panel-stats">
-                <strong>Resultados:</strong>
-                <div id="res-actual">--</div>
-            </div>
         </div>
     </div>
 </div>
 
 <script>
-// URL CORREGIDA: Apunta al contenido "Raw" de GitHub
 const BASE_URL_NUBE = "https://raw.githubusercontent.com/Jhonbonet/ejercicios/main/"; 
-
-let currentUser = "";
-let faseActual = 1; 
-let leccionActual = 1;
-let ejercicioActual = 1;
-let textoActivo = "";
-let tInicio = null;
+let currentUser = "", faseActual = 1, ejercicioActual = 1, textoActivo = "", tInicio = null;
 
 function login() {
     currentUser = document.getElementById('user-id').value;
-    if(!currentUser) {
-        alert("Por favor ingresa un nombre");
-        return;
-    }
+    if(!currentUser) return;
     document.getElementById('inicio').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
     cambiarFase(1);
@@ -117,79 +92,49 @@ function cambiarFase(num) {
 function renderizarMenuLecciones() {
     const contenedor = document.getElementById('acordeon-lecciones');
     contenedor.innerHTML = "";
-    
     for(let l = 1; l <= 10; l++) {
-        let divLeccion = document.createElement("div");
-        divLeccion.style.marginTop = "10px";
-        divLeccion.innerHTML = `<strong>Lección ${l}</strong>`;
+        let div = document.createElement("div");
+        div.innerHTML = `<strong>Lección ${l}</strong>`;
         let grid = document.createElement("div");
         grid.className = "lista-ejercicios";
-        
         for(let e = 1; e <= 10; e++) {
-            let numArchivo = calcularNumeroArchivo(faseActual, l, e);
+            let num = ((faseActual - 1) * 100) + ((l - 1) * 10) + e;
             let btn = document.createElement("div");
-            btn.className = "btn-ejer";
+            btn.className = "btn-ejer" + (localStorage.getItem(`${currentUser}_ex_${num}`) ? " done" : "");
             btn.innerText = e;
-            
-            if(localStorage.getItem(`${currentUser}_ex_${numArchivo}`)) {
-                btn.classList.add("done");
-                btn.innerText += "✓";
-            }
-            
-            btn.onclick = () => cargarEjercicioNube(numArchivo, l, e);
+            btn.onclick = () => cargarEjercicioNube(num);
             grid.appendChild(btn);
         }
-        contenedor.appendChild(divLeccion);
+        contenedor.appendChild(div);
         contenedor.appendChild(grid);
     }
 }
 
-function calcularNumeroArchivo(fase, lecc, ejer) {
-    let offset = (fase - 1) * 100;
-    return offset + ((lecc - 1) * 10) + ejer;
-}
-
-async function cargarEjercicioNube(idArchivo, lecc, ejer) {
+async function cargarEjercicioNube(id) {
     const pantalla = document.getElementById('contenido-ejercicio');
-    pantalla.innerText = "Cargando ejercicio " + idArchivo + "...";
-    
+    pantalla.innerText = "Cargando...";
     try {
-        // Fetch con cache-busting para asegurar que traiga el archivo actualizado
-        const respuesta = await fetch(`${BASE_URL_NUBE}${idArchivo}.txt?t=${new Date().getTime()}`);
-        
-        if(!respuesta.ok) throw new Error("No se pudo conectar con el servidor de archivos");
-        
-        let texto = await respuesta.text();
-        // Corrección: Eliminar caracteres de retorno de carro (\r) comunes en Windows
-        textoActivo = texto.replace(/\r/g, ""); 
-        
-        ejercicioActual = idArchivo;
-        leccionActual = lecc;
-        
+        const res = await fetch(`${BASE_URL_NUBE}${id}.txt?t=${new Date().getTime()}`);
+        if(!res.ok) throw new Error();
+        const buffer = await res.arrayBuffer();
+        textoActivo = new TextDecoder('utf-8').decode(buffer).replace(/\r/g, "").trim();
+        ejercicioActual = id;
         document.getElementById('input-oculto').value = "";
         tInicio = null;
         actualizarTablero(0);
-        
-        // Enfocar el input invisible para empezar a escribir
         setTimeout(() => document.getElementById('input-oculto').focus(), 200);
-        
-    } catch (error) {
-        console.error(error);
-        pantalla.innerHTML = `<span style="color:red; font-size:16px;">Error al cargar ${idArchivo}.txt.<br>Verifica que el archivo exista en el repositorio de GitHub.</span>`;
+    } catch (e) {
+        pantalla.innerHTML = `<span style="color:red">Error al cargar archivo ${id}.txt</span>`;
     }
 }
 
 function actualizarTablero(pos) {
     const cont = document.getElementById('contenido-ejercicio');
     cont.innerHTML = "";
-    if(!textoActivo) return;
-
     for (let i = 0; i < textoActivo.length; i++) {
         let span = document.createElement("span");
-        let char = textoActivo[i];
-        // Visualizar espacios para que no se pierdan
-        span.innerText = char; 
-        span.className = i < pos ? "letra-hecha" : (i === pos ? "letra-guia" : "letra-pendiente");
+        span.innerText = textoActivo[i];
+        span.className = i < pos ? "letra-hecha" : (i === pos ? "letra-guia" : "");
         cont.appendChild(span);
     }
 }
@@ -197,32 +142,18 @@ function actualizarTablero(pos) {
 function procesar() {
     if (!textoActivo) return;
     if (!tInicio) tInicio = new Date();
-    
     const val = document.getElementById('input-oculto').value;
     actualizarTablero(val.length);
-    
-    if (val.length >= textoActivo.length) {
-        finalizar();
-    }
+    if (val.length >= textoActivo.length) finalizar();
 }
 
 function finalizar() {
     const val = document.getElementById('input-oculto').value;
-    let errores = 0;
-    
-    for (let i = 0; i < textoActivo.length; i++) {
-        if (val[i] !== textoActivo[i]) errores++;
-    }
-    
-    const pBrutas = val.length;
-    const pNetas = Math.max(0, pBrutas - (errores * 4));
-    
-    localStorage.setItem(`${currentUser}_ex_${ejercicioActual}`, "completado");
-    
-    alert(`¡Completado!\nEjercicio: ${ejercicioActual}\nErrores: ${errores}\nPulsaciones Netas: ${pNetas}`);
-    
+    let err = 0;
+    for (let i = 0; i < textoActivo.length; i++) if (val[i] !== textoActivo[i]) err++;
+    localStorage.setItem(`${currentUser}_ex_${ejercicioActual}`, "1");
+    alert(`Ejercicio ${ejercicioActual}\nErrores: ${err}\nNetas: ${val.length - (err * 4)}`);
     renderizarMenuLecciones();
-    textoActivo = "";
     document.getElementById('contenido-ejercicio').innerText = "Seleccione otro ejercicio...";
 }
 </script>
