@@ -111,24 +111,21 @@ function renderizarMenuLecciones() {
 
 async function cargarEjercicioNube(id) {
     const pantalla = document.getElementById('contenido-ejercicio');
-    pantalla.innerText = "Cargando...";
+    pantalla.innerText = "Cargando archivo...";
     try {
         const res = await fetch(`${BASE_URL_NUBE}${id}.txt?t=${new Date().getTime()}`);
         if(!res.ok) throw new Error();
         
         const buffer = await res.arrayBuffer();
         
-        // Decodificamos primero en UTF-8
-        let decoderUTF8 = new TextDecoder('utf-8');
-        let texto = decoderUTF8.decode(buffer);
+        // CORRECCIÓN DEFINITIVA: 
+        // Forzamos la decodificación a Windows-1252 (ANSI) para recuperar la Ñ y tildes
+        const decoder = new TextDecoder('windows-1252');
+        let texto = decoder.decode(buffer);
 
-        // Si detectamos el símbolo de error (), re-decodificamos en ISO-8859-1 (Windows/ANSI)
-        if (texto.includes('')) {
-            let decoderANSI = new TextDecoder('iso-8859-1');
-            texto = decoderANSI.decode(buffer);
-        }
-
+        // Limpieza de caracteres: quitamos saltos de línea Windows y espacios de control
         textoActivo = texto.replace(/\r/g, "").trim();
+        
         ejercicioActual = id;
         document.getElementById('input-oculto').value = "";
         tInicio = null;
@@ -136,7 +133,7 @@ async function cargarEjercicioNube(id) {
         setTimeout(() => document.getElementById('input-oculto').focus(), 200);
 
     } catch (e) {
-        pantalla.innerHTML = `<span style="color:red">Error al cargar archivo ${id}.txt</span>`;
+        pantalla.innerHTML = `<span style="color:red">No se pudo cargar el ejercicio ${id}.txt</span>`;
     }
 }
 
