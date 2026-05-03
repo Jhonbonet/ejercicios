@@ -116,13 +116,23 @@ async function cargarEjercicioNube(id) {
     try {
         const res = await fetch(`${BASE_URL_NUBE}${id}.txt?t=${new Date().getTime()}`);
         if(!res.ok) throw new Error();
-        const buffer = await res.arrayBuffer();
-        textoActivo = new TextDecoder('utf-8').decode(buffer).replace(/\r/g, "").trim();
-        ejercicioActual = id;
-        document.getElementById('input-oculto').value = "";
-        tInicio = null;
-        actualizarTablero(0);
-        setTimeout(() => document.getElementById('input-oculto').focus(), 200);
+        
+        const blob = await res.blob();
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            // Se usa windows-1252 para asegurar que lea la Ñ y acentos de archivos ANSI de Windows
+            textoActivo = e.target.result.replace(/\r/g, "").trim();
+            ejercicioActual = id;
+            document.getElementById('input-oculto').value = "";
+            tInicio = null;
+            actualizarTablero(0);
+            setTimeout(() => document.getElementById('input-oculto').focus(), 200);
+        };
+        
+        // Esta línea es la clave para corregir la Ñ
+        reader.readAsText(blob, 'windows-1252'); 
+
     } catch (e) {
         pantalla.innerHTML = `<span style="color:red">Error al cargar archivo ${id}.txt</span>`;
     }
@@ -150,7 +160,9 @@ function procesar() {
 function finalizar() {
     const val = document.getElementById('input-oculto').value;
     let err = 0;
-    for (let i = 0; i < textoActivo.length; i++) if (val[i] !== textoActivo[i]) err++;
+    for (let i = 0; i < textoActivo.length; i++) {
+        if (val[i] !== textoActivo[i]) err++;
+    }
     localStorage.setItem(`${currentUser}_ex_${ejercicioActual}`, "1");
     alert(`Ejercicio ${ejercicioActual}\nErrores: ${err}\nNetas: ${val.length - (err * 4)}`);
     renderizarMenuLecciones();
