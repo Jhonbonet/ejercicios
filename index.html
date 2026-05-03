@@ -21,33 +21,30 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 #inicio, #app { width: 95%; max-width: 1100px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid #888; }
 .hidden { display: none; }
 
-/* PANTALLA VERDE - ELIMINACIÓN DE MARGEN SUPERIOR */
+/* PANTALLA VERDE */
 .pantalla-verde { 
     font-size: 22px; 
     background-color: var(--board-bg); 
     color: var(--text-untyped); 
     border: 4px inset #004d40; 
-    padding: 0px 15px; /* Cero padding superior e inferior */
+    padding: 0px 15px; 
     height: 135px; 
     overflow: hidden; 
     letter-spacing: 1px; 
     white-space: pre-wrap; 
-    line-height: 22px; /* Altura de línea igual al tamaño de fuente */
+    line-height: 22px; 
     position: relative; 
     margin-bottom: 10px;
+    display: flex;
 }
 
-#contenido-ejercicio {
-    display: block;
-    margin-top: -4px; /* Margen negativo para eliminar el espacio de reserva superior */
-}
-
+#contenido-ejercicio { width: 100%; margin-top: -4px; }
 #input-oculto { position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; }
 .letra-hecha { color: var(--text-typed); }
 .letra-guia { background-color: var(--guia); color: white !important; animation: blinker 0.8s linear infinite; }
 @keyframes blinker { 50% { opacity: 0; } }
 
-/* Layout Principal */
+/* Layout */
 .contenedor-principal { display: flex; gap: 15px; }
 .columna-izquierda { flex: 2.5; }
 .sidebar-derecha { flex: 1; background: #f0f0f0; border: 2px solid #008282; border-radius: 8px; padding: 10px; height: 82vh; overflow-y: auto; }
@@ -66,13 +63,13 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 .tecla.shift-l, .tecla.shift-r { width: 110px; }
 .tecla.espacio { width: 340px; background: var(--thumb); }
 
-/* Colores Dedos */
+/* Colores */
 .m-izq { background-color: var(--pinky); } .a-izq { background-color: var(--ring); }
 .med-izq { background-color: var(--middle); } .i-izq { background-color: var(--index-l); }
 .i-der { background-color: var(--index-r); } .med-der { background-color: var(--middle); }
 .a-der { background-color: var(--ring); } .m-der { background-color: var(--pinky); }
 
-/* Menu Lateral */
+/* Menu */
 .btn-fase { padding: 10px; cursor: pointer; border: 2px solid #008282; background: #ddd; font-weight: bold; margin-bottom: 5px; width: 100%; border-radius: 5px; }
 .btn-fase.active { background: #008282; color: white; }
 .lista-ejercicios { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 15px; }
@@ -99,7 +96,7 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
                 <div id="contenido-ejercicio">Selecciona una lección...</div>
             </div>
 
-            <div id="instruccion-dedo" style="text-align:center; color:red; font-weight:bold; margin-bottom:10px;">ASDF - JKLÑ</div>
+            <div id="instruccion-dedo" style="text-align:center; color:red; font-weight:bold; margin-bottom:10px; height: 24px;">POSICIÓN INICIAL: ASDF - JKLÑ</div>
 
             <div class="teclado-container">
                 <div class="fila-teclado">
@@ -115,7 +112,7 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
                     <div class="tecla shift-l">Mayús</div><div class="tecla m-izq"><</div><div class="tecla m-izq">Z</div><div class="tecla a-izq">X</div><div class="tecla med-izq">C</div><div class="tecla i-izq">V</div><div class="tecla i-izq">B</div><div class="tecla i-der">N</div><div class="tecla i-der">M</div><div class="tecla med-der">,</div><div class="tecla a-der">.</div><div class="tecla m-der">-</div><div class="tecla shift-r">Mayús</div>
                 </div>
                 <div class="fila-teclado">
-                    <div class="tecla espacio"> </div>
+                    <div class="tecla espacio" id="t-espacio"> </div>
                 </div>
             </div>
         </div>
@@ -132,6 +129,19 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 <script>
 const BASE_URL_NUBE = "https://raw.githubusercontent.com/Jhonbonet/ejercicios/main/"; 
 let currentUser = "", faseActual = 1, textoActivo = "", ejercicioActual = 0;
+
+// Mapeo de dedos según el cuaderno MecaMatic
+const mapaDedos = {
+    'q':'MEÑIQUE IZQUIERDO', 'a':'MEÑIQUE IZQUIERDO', 'z':'MEÑIQUE IZQUIERDO', '1':'MEÑIQUE IZQUIERDO', 'º':'MEÑIQUE IZQUIERDO',
+    'w':'ANULAR IZQUIERDO', 's':'ANULAR IZQUIERDO', 'x':'ANULAR IZQUIERDO', '2':'ANULAR IZQUIERDO',
+    'e':'MEDIO IZQUIERDO', 'd':'MEDIO IZQUIERDO', 'c':'MEDIO IZQUIERDO', '3':'MEDIO IZQUIERDO',
+    'r':'ÍNDICE IZQUIERDO', 'f':'ÍNDICE IZQUIERDO', 'v':'ÍNDICE IZQUIERDO', '4':'ÍNDICE IZQUIERDO', 't':'ÍNDICE IZQUIERDO', 'g':'ÍNDICE IZQUIERDO', 'b':'ÍNDICE IZQUIERDO', '5':'ÍNDICE IZQUIERDO',
+    'y':'ÍNDICE DERECHO', 'h':'ÍNDICE DERECHO', 'n':'ÍNDICE DERECHO', '6':'ÍNDICE DERECHO', 'u':'ÍNDICE DERECHO', 'j':'ÍNDICE DERECHO', 'm':'ÍNDICE DERECHO', '7':'ÍNDICE DERECHO',
+    'i':'MEDIO DERECHO', 'k':'MEDIO DERECHO', ',':'MEDIO DERECHO', '8':'MEDIO DERECHO',
+    'o':'ANULAR DERECHO', 'l':'ANULAR DERECHO', '.':'ANULAR DERECHO', '9':'ANULAR DERECHO',
+    'p':'MEÑIQUE DERECHO', 'ñ':'MEÑIQUE DERECHO', '-':'MEÑIQUE DERECHO', '0':'MEÑIQUE DERECHO', '¡':'MEÑIQUE DERECHO', "'":'MEÑIQUE DERECHO',
+    ' ':'PULGAR (ESPACIADOR)'
+};
 
 function login() {
     currentUser = document.getElementById('user-id').value;
@@ -186,22 +196,44 @@ async function cargarEjercicioNube(id) {
 
 function actualizarTablero(pos) {
     const cont = document.getElementById('contenido-ejercicio');
+    const instruccion = document.getElementById('instruccion-dedo');
     cont.innerHTML = "";
+    
     for (let i = 0; i < textoActivo.length; i++) {
         let span = document.createElement("span");
         span.innerText = textoActivo[i];
         span.className = i < pos ? "letra-hecha" : (i === pos ? "letra-guia" : "");
         cont.appendChild(span);
     }
+
+    // Mostrar instrucción del dedo para la letra actual
+    if (pos < textoActivo.length) {
+        let charActual = textoActivo[pos].toLowerCase();
+        instruccion.innerText = "PULSAR CON: " + (mapaDedos[charActual] || "POSICIÓN CORRECTA");
+    } else {
+        instruccion.innerText = "¡EJERCICIO TERMINADO!";
+    }
 }
 
 function procesar() {
     if (!textoActivo) return;
-    const val = document.getElementById('input-oculto').value;
-    actualizarTablero(val.length);
-    if (val.length >= textoActivo.length) {
+    const input = document.getElementById('input-oculto');
+    let val = input.value;
+    let posActual = val.length - 1;
+
+    // VALIDACIÓN: Si la tecla presionada no es la correcta, se elimina del input
+    if (val.length > 0) {
+        if (val[posActual] !== textoActivo[posActual]) {
+            input.value = val.substring(0, posActual); // Borra el error
+            return; // No actualiza el tablero (el resaltador no se mueve)
+        }
+    }
+
+    actualizarTablero(input.value.length);
+
+    if (input.value.length >= textoActivo.length) {
         localStorage.setItem(`${currentUser}_ex_${ejercicioActual}`, "1");
-        alert("¡Ejercicio " + ejercicioActual + " completado!");
+        alert("¡Ejercicio " + ejercicioActual + " completado con éxito!");
         renderizarMenu();
     }
 }
