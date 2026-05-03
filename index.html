@@ -21,27 +21,25 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 #inicio, #app { width: 95%; max-width: 1100px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid #888; }
 .hidden { display: none; }
 
-/* PANTALLA VERDE - AJUSTE DE ALTURA Y POSICIÓN DEL TEXTO */
+/* PANTALLA VERDE - ELIMINACIÓN DE MARGEN SUPERIOR */
 .pantalla-verde { 
     font-size: 22px; 
     background-color: var(--board-bg); 
     color: var(--text-untyped); 
     border: 4px inset #004d40; 
-    padding: 2px 15px; /* Padding superior casi nulo para subir el texto */
+    padding: 0px 15px; /* Cero padding superior e inferior */
     height: 135px; 
     overflow: hidden; 
     letter-spacing: 1px; 
     white-space: pre-wrap; 
-    line-height: 0.9; /* Interlineado ultra compacto para que el texto suba */
+    line-height: 22px; /* Altura de línea igual al tamaño de fuente */
     position: relative; 
     margin-bottom: 10px;
-    display: flex;
-    align-items: flex-start; /* Asegura que el contenido empiece arriba */
 }
 
 #contenido-ejercicio {
-    width: 100%;
-    margin-top: 0; /* Elimina cualquier margen superior */
+    display: block;
+    margin-top: -4px; /* Margen negativo para eliminar el espacio de reserva superior */
 }
 
 #input-oculto { position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; }
