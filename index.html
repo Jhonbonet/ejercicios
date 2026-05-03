@@ -1,50 +1,50 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>MecaMatic 4.0 ADN - Pro Cloud</title>
-<style>
-    :root {
-        --pinky: #FFFFC0; --ring: #C0FFC0; --middle: #C0FFFF;
-        --index-l: #FFC0FF; --index-r: #FF96FF; --thumb: #FFC0C0;
-        --guia: #ff0000; --board-bg: #008282; --text-untyped: #ffffff;
-        --text-typed: #000000;
-    }
-    body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display: flex; flex-direction: column; align-items: center; padding: 5px; margin: 0; }
-    #inicio, #app { width: 95%; max-width: 1100px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid #888; }
-    .hidden { display: none; }
-    .panel-info { display: flex; justify-content: space-between; background: #333; color: white; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 14px; align-items: center; }
-    .pantalla-verde { 
-        font-size: 26px; background-color: var(--board-bg); color: var(--text-untyped); 
-        border: 4px inset #004d40; padding: 15px; margin-bottom: 10px; min-height: 100px; 
-        display: flex; align-items: flex-start; overflow: hidden; letter-spacing: 1px; 
-        white-space: pre-wrap; line-height: 1.2; position: relative; cursor: text; word-wrap: break-word;
-    }
-    #input-oculto { position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; }
-    .letra-hecha { color: var(--text-typed); opacity: 0.6; }
-    .letra-guia { background-color: var(--guia); color: white !important; animation: blinker 0.6s linear infinite; }
-    @keyframes blinker { 50% { opacity: 0.3; } }
-    @keyframes blinker-key { 50% { background-color: #ff0000; color: white; transform: scale(1.05); } }
-    .tecla-activa { animation: blinker-key 0.6s linear infinite !important; z-index: 10; border: 2px solid black !important; }
-    .contenedor-principal { display: flex; gap: 15px; }
-    .columna-izquierda { flex: 2.5; }
-    .sidebar-derecha { flex: 1; background: #f0f0f0; border: 2px solid #008282; border-radius: 8px; padding: 10px; height: 75vh; overflow-y: auto; }
-    .teclado-container { background: #444; padding: 12px; border-radius: 12px; border: 4px solid #222; user-select: none; }
-    .fila-teclado { display: flex; justify-content: center; gap: 4px; margin-bottom: 5px; }
-    .tecla { width: 48px; height: 50px; background: white; border: 1px solid #000; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: bold; font-size: 11px; border-radius: 6px; box-shadow: 2px 3px 0px #111; }
-    .tecla.enter { width: 100px; background: #888; color: white; }
-    .tecla.espacio { width: 350px; background: var(--thumb); }
-    .m-izq { background: var(--pinky); } .a-izq { background: var(--ring); } .med-izq { background: var(--middle); } .i-izq { background: var(--index-l); }
-    .i-der { background: var(--index-r); } .med-der { background: var(--middle); } .a-der { background: var(--ring); } .m-der { background: var(--pinky); }
-    .btn-fase { padding: 8px; cursor: pointer; border: 2px solid #008282; background: #ddd; font-weight: bold; width: 100%; margin-bottom: 5px; }
-    .btn-fase.active { background: #008282; color: white; }
-    .lista-ejercicios { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 15px; }
-    .btn-ejer { font-size: 10px; padding: 5px; cursor: pointer; border: 1px solid #aaa; text-align: center; background: white; border-radius: 4px; }
-    .btn-ejer.completado { background: #28a745 !important; color: white; font-weight: bold; }
-    table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
-    th, td { border: 1px solid #888; padding: 6px; text-align: center; }
-    th { background: #008282; color: white; }
-</style>
+    <meta charset="UTF-8">
+    <title>MecaMatic 4.0 ADN - Pro Cloud Full</title>
+    <style>
+        :root {
+            --pinky: #FFFFC0; --ring: #C0FFC0; --middle: #C0FFFF;
+            --index-l: #FFC0FF; --index-r: #FF96FF; --thumb: #FFC0C0;
+            --guia: #ff0000; --board-bg: #008282; --text-untyped: #ffffff;
+            --text-typed: #000000;
+        }
+        body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display: flex; flex-direction: column; align-items: center; padding: 5px; margin: 0; }
+        #inicio, #app { width: 95%; max-width: 1100px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid #888; }
+        .hidden { display: none; }
+        .panel-info { display: flex; justify-content: space-between; background: #333; color: white; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 14px; align-items: center; }
+        .pantalla-verde { 
+            font-size: 26px; background-color: var(--board-bg); color: var(--text-untyped); 
+            border: 4px inset #004d40; padding: 15px; margin-bottom: 10px; min-height: 100px; 
+            display: flex; align-items: flex-start; overflow: hidden; letter-spacing: 1px; 
+            white-space: pre-wrap; line-height: 1.2; position: relative; cursor: text; word-wrap: break-word;
+        }
+        #input-oculto { position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; }
+        .letra-hecha { color: var(--text-typed); opacity: 0.6; }
+        .letra-guia { background-color: var(--guia); color: white !important; animation: blinker 0.6s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0.3; } }
+        @keyframes blinker-key { 50% { background-color: #ff0000 !important; color: white; transform: scale(1.05); } }
+        .tecla-activa { animation: blinker-key 0.6s linear infinite !important; z-index: 10; border: 2px solid black !important; }
+        .contenedor-principal { display: flex; gap: 15px; }
+        .columna-izquierda { flex: 2.5; }
+        .sidebar-derecha { flex: 1; background: #f0f0f0; border: 2px solid #008282; border-radius: 8px; padding: 10px; height: 75vh; overflow-y: auto; }
+        .teclado-container { background: #444; padding: 12px; border-radius: 12px; border: 4px solid #222; user-select: none; }
+        .fila-teclado { display: flex; justify-content: center; gap: 4px; margin-bottom: 5px; }
+        .tecla { width: 48px; height: 50px; background: white; border: 1px solid #000; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: bold; font-size: 11px; border-radius: 6px; box-shadow: 2px 3px 0px #111; }
+        .tecla.enter { width: 100px; background: #888; color: white; }
+        .tecla.espacio { width: 350px; background: var(--thumb); }
+        .m-izq { background: var(--pinky); } .a-izq { background: var(--ring); } .med-izq { background: var(--middle); } .i-izq { background: var(--index-l); }
+        .i-der { background: var(--index-r); } .med-der { background: var(--middle); } .a-der { background: var(--ring); } .m-der { background: var(--pinky); }
+        .btn-fase { padding: 8px; cursor: pointer; border: 2px solid #008282; background: #ddd; font-weight: bold; width: 100%; margin-bottom: 5px; }
+        .btn-fase.active { background: #008282; color: white; }
+        .lista-ejercicios { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 15px; }
+        .btn-ejer { font-size: 10px; padding: 5px; cursor: pointer; border: 1px solid #aaa; text-align: center; background: white; border-radius: 4px; }
+        .btn-ejer.completado { background: #28a745 !important; color: white; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+        th, td { border: 1px solid #888; padding: 6px; text-align: center; }
+        th { background: #008282; color: white; }
+    </style>
 </head>
 <body>
 
@@ -130,7 +130,25 @@ let erroresContador = 0, tInicio = null, esperandoInicio = false;
 let timerSecs = 0, timerInterval = null, audioCtx = null;
 let progresoCargado = {};
 
-const mapaDedos = { 'q':'MEÑIQUE IZQ', 'a':'MEÑIQUE IZQ', 'z':'MEÑIQUE IZQ', '1':'MEÑIQUE IZQ', 'w':'ANULAR IZQ', 's':'ANULAR IZQ', 'x':'ANULAR IZQ', '2':'ANULAR IZQ', 'e':'MEDIO IZQ', 'd':'MEDIO IZQ', 'c':'MEDIO IZQ', '3':'MEDIO IZQ', 'r':'ÍNDICE IZQ', 'f':'ÍNDICE IZQ', 'v':'ÍNDICE IZQ', '4':'ÍNDICE IZQ', 't':'ÍNDICE IZQ', 'g':'ÍNDICE IZQ', 'b':'ÍNDICE IZQ', '5':'ÍNDICE IZQ', 'y':'ÍNDICE DER', 'h':'ÍNDICE DER', 'n':'ÍNDICE DER', '6':'ÍNDICE DER', 'u':'ÍNDICE DER', 'j':'ÍNDICE DER', 'm':'ÍNDICE DER', '7':'ÍNDICE DER', 'i':'MEDIO DER', 'k':'MEDIO DER', ',':'MEDIO DER', '8':'MEDIO DER', 'o':'ANULAR DER', 'l':'ANULAR DER', '.':'ANULAR DER', '9':'ANULAR DER', 'p':'MEÑIQUE DER', 'ñ':'MEÑIQUE DER', '0':'MEÑIQUE DER', ' ':'PULGAR' };
+const mapaDedos = { 
+    'q':'MEÑIQUE IZQ', 'a':'MEÑIQUE IZQ', 'z':'MEÑIQUE IZQ', '1':'MEÑIQUE IZQ', 'º':'MEÑIQUE IZQ', '<':'MEÑIQUE IZQ',
+    'w':'ANULAR IZQ', 's':'ANULAR IZQ', 'x':'ANULAR IZQ', '2':'ANULAR IZQ',
+    'e':'MEDIO IZQ', 'd':'MEDIO IZQ', 'c':'MEDIO IZQ', '3':'MEDIO IZQ',
+    'r':'ÍNDICE IZQ', 'f':'ÍNDICE IZQ', 'v':'ÍNDICE IZQ', '4':'ÍNDICE IZQ',
+    't':'ÍNDICE IZQ', 'g':'ÍNDICE IZQ', 'b':'ÍNDICE IZQ', '5':'ÍNDICE IZQ', '6':'ÍNDICE IZQ',
+    'y':'ÍNDICE DER', 'h':'ÍNDICE DER', 'n':'ÍNDICE DER', '7':'ÍNDICE DER',
+    'u':'ÍNDICE DER', 'j':'ÍNDICE DER', 'm':'ÍNDICE DER', 
+    'i':'MEDIO DER', 'k':'MEDIO DER', ',':'MEDIO DER', '8':'MEDIO DER',
+    'o':'ANULAR DER', 'l':'ANULAR DER', '.':'ANULAR DER', '9':'ANULAR DER',
+    'p':'MEÑIQUE DER', 'ñ':'MEÑIQUE DER', '0':'MEÑIQUE DER', "'":'MEÑIQUE DER', '¡':'MEÑIQUE DER', '´':'MEÑIQUE DER', '+':'MEÑIQUE DER', '-':'MEÑIQUE DER',
+    ' ':'PULGAR' 
+};
+
+// Mapa de caracteres que requieren Shift en teclado español
+const shiftMap = {
+    '!':'1', '"':'2', '·':'3', '$':'4', '%':'5', '&':'6', '/':'7', '(':'8', ')':'9', '=':'0', '?':"'", '¿':'¡',
+    '>':'<', ';':',', ':':'.', '_':'-', '*':'^', 'ª':'º'
+};
 
 function iniciarAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
 function sonar(frec, tipo, dur) {
@@ -147,8 +165,6 @@ async function login() {
     currentUser = document.getElementById('user-id').value.trim().toUpperCase();
     if(!currentUser) return alert("Ingresa tu nombre");
     iniciarAudio();
-
-    // SINCRONIZACIÓN NUBE: Descargar historial del servidor al iniciar
     document.getElementById('display-user').innerText = "SINCRONIZANDO...";
     try {
         const resp = await fetch(`${WEB_APP_URL}?action=load&user=${currentUser}`);
@@ -157,7 +173,6 @@ async function login() {
         const saved = localStorage.getItem('mecamatic_v4_' + currentUser);
         progresoCargado = saved ? JSON.parse(saved) : {};
     }
-
     document.getElementById('display-user').innerText = "ESTUDIANTE: " + currentUser;
     document.getElementById('inicio').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
@@ -195,10 +210,8 @@ async function cargarEjercicio(id, numLeccion) {
         ejercicioActual = id; erroresContador = 0;
         document.getElementById('err-count').innerText = "0";
         document.getElementById('contenido-ejercicio').innerHTML = "<span style='color:red;'>PULSE [ENTER] PARA COMENZAR</span>";
-        
         timerSecs = (faseActual === 1 && numLeccion <= 5) ? 720 : 420;
         if (faseActual > 1) timerSecs = 600;
-
         actualizarReloj();
         esperandoInicio = true; document.getElementById('input-oculto').focus();
         resaltarTeclaDual("ENTER");
@@ -230,7 +243,6 @@ function actualizarReloj() {
     document.getElementById('timer').innerText = `${m}:${s < 10 ? '0'+s : s}`;
 }
 
-// LÓGICA DE RESALTADO DUAL (Shift + Letra / Tilde + Letra)
 function resaltarTeclaDual(char) {
     document.querySelectorAll('.tecla').forEach(t => t.classList.remove('tecla-activa'));
     
@@ -239,27 +251,41 @@ function resaltarTeclaDual(char) {
         return;
     }
 
-    // 1. Detectar si es Mayúscula (requiere Shift)
+    let requiereShift = false;
+    let teclaBase = char.toUpperCase();
+
+    // Lógica para Mayúsculas
     if (char !== " " && char === char.toUpperCase() && char !== char.toLowerCase()) {
-        const manoDedo = mapaDedos[char.toLowerCase()];
-        if (manoDedo && manoDedo.includes("DER")) {
+        requiereShift = true;
+        teclaBase = char.toUpperCase();
+    }
+
+    // Lógica para Símbolos de la fila numérica y otros (Shift + Tecla)
+    if (shiftMap[char]) {
+        requiereShift = true;
+        teclaBase = shiftMap[char];
+    }
+
+    // Lógica para tildes
+    const tildes = {'á':'A', 'é':'E', 'í':'I', 'ó':'O', 'ú':'U', 'Á':'A', 'É':'E', 'Í':'I', 'Ó':'O', 'Ú':'U'};
+    if (tildes[char]) {
+        document.getElementById('key-´').classList.add('tecla-activa');
+        teclaBase = tildes[char];
+        if(char === char.toUpperCase()) requiereShift = true;
+    }
+
+    // Activar Shift si es necesario
+    if (requiereShift) {
+        const manoDedo = mapaDedos[char.toLowerCase()] || "";
+        if (manoDedo.includes("DER")) {
             document.getElementById('key-SHIFT-L').classList.add('tecla-activa');
         } else {
             document.getElementById('key-SHIFT-R').classList.add('tecla-activa');
         }
     }
 
-    // 2. Detectar si requiere tildes
-    const tildes = {'á':'A', 'é':'E', 'í':'I', 'ó':'O', 'ú':'U', 'Á':'A', 'É':'E', 'Í':'I', 'Ó':'O', 'Ú':'U'};
-    if (tildes[char]) {
-        document.getElementById('key-´').classList.add('tecla-activa');
-        char = tildes[char]; // Para resaltar la letra base también
-    }
-
-    // 3. Resaltar la tecla principal
-    let id = char.toUpperCase();
-    const tecla = document.getElementById('key-' + id);
-    if(tecla) tecla.classList.add('tecla-activa');
+    const teclaPrincipal = document.getElementById('key-' + teclaBase);
+    if(teclaPrincipal) teclaPrincipal.classList.add('tecla-activa');
 }
 
 function actualizarTablero(pos) {
@@ -282,7 +308,6 @@ function procesar() {
     if(esperandoInicio) return;
     const input = document.getElementById('input-oculto');
     let val = input.value; let pos = val.length - 1;
-    
     if(val[pos] === textoActivo[pos]) {
         sonar(400, 'triangle', 0.03);
         actualizarTablero(val.length);
@@ -300,20 +325,13 @@ function finalizar() {
     clearInterval(timerInterval);
     const tMin = (new Date() - tInicio) / 60000;
     const pBrutas = textoActivo.length;
-    const ppmB = Math.round(pBrutas / tMin);
-    // Fórmula solicitada (MEP): Netas = (Brutas - Errores*4) / Tiempo
     const ppmN = Math.round((pBrutas - (erroresContador * 4)) / tMin);
     const prec = ((pBrutas - erroresContador) / pBrutas * 100).toFixed(2);
     const fecha = new Date().toLocaleDateString();
-
-    const result = { ppmB, ppmN, err: erroresContador, prec, fecha };
-    progresoCargado[ejercicioActual] = result;
+    progresoCargado[ejercicioActual] = { ppmN, err: erroresContador, prec, fecha };
     localStorage.setItem('mecamatic_v4_' + currentUser, JSON.stringify(progresoCargado));
-    
-    // GUARDADO EN NUBE (Google Sheets)
     const params = `?action=save&user=${encodeURIComponent(currentUser)}&ejercicio=${ejercicioActual}&ppm_netas=${ppmN}&errores=${erroresContador}&precision=${prec}&fecha=${encodeURIComponent(fecha)}`;
     fetch(WEB_APP_URL + params, { mode: 'no-cors' });
-
     alert(`¡EXCELENTE!\nNetas: ${ppmN} PPM\nPrecisión: ${prec}%`);
     cambiarFase(faseActual);
 }
@@ -323,7 +341,7 @@ function abrirLogros() {
     body.innerHTML = "";
     Object.keys(progresoCargado).sort((a,b)=>a-b).forEach(id => {
         let log = progresoCargado[id];
-        body.innerHTML += `<tr><td>${id}</td><td>${log.ppmB}</td><td>${log.ppmN}</td><td>${log.err}</td><td>${log.prec}%</td><td>${log.fecha}</td></tr>`;
+        body.innerHTML += `<tr><td>${id}</td><td>-</td><td>${log.ppmN}</td><td>${log.err}</td><td>${log.prec}%</td><td>${log.fecha}</td></tr>`;
     });
     document.getElementById('modal-logros').style.display = 'block';
 }
