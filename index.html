@@ -15,22 +15,23 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 #inicio, #app { width: 95%; max-width: 1100px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid #888; }
 .hidden { display: none; }
 
-/* PANTALLA DE TEXTO - CORRECCIÓN REBELDE */
+/* PANTALLA DE TEXTO - CORRECCIÓN RADICAL DE MÁRGENES */
 .pantalla-verde { 
-    font-size: 24px; /* Un poco más grande para llenar el espacio */
+    font-size: 26px; /* Aumentado para mayor visibilidad */
     background-color: var(--board-bg); 
     color: var(--text-untyped); 
     border: 4px inset #004d40; 
-    padding: 2px 5px; /* Mínimo absoluto lateral y superior */
-    min-height: auto; /* Quitamos el alto mínimo para eliminar el vacío inferior */
-    height: auto;      
+    padding: 0; /* Cero absoluto */
+    margin: 0 0 10px 0;
+    min-height: 0; /* Eliminamos el mínimo anterior */
+    height: auto; 
+    display: flex; /* Forzamos alineación superior */
+    align-items: flex-start;
     overflow: hidden; 
     letter-spacing: 1px; 
     white-space: pre-wrap; 
-    line-height: 1.1; /* Pegamos las líneas entre sí */
+    line-height: 1.05; /* Pegado vertical máximo */
     position: relative; 
-    margin-bottom: 5px; 
-    display: block; 
     cursor: text;
     word-wrap: break-word;
 }
@@ -38,7 +39,8 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 #contenido-ejercicio { 
     width: 100%; 
     margin: 0;
-    padding: 0;
+    padding: 2px 5px; /* Un pequeño respiro lateral para que no toque el borde físico */
+    text-align: left;
 }
 
 #input-oculto { position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; }
@@ -89,7 +91,7 @@ th { background: #008282; color: white; }
 <body onload="limpiarUsuariosAntiguos()">
 
 <div id="inicio">
-    <h1 style="color:#008282; text-align:center;">MecaMatic 4.0 ADN2</h1>
+    <h1 style="color:#008282; text-align:center;">MecaMatic 4.0 ADN</h1>
     <div style="text-align:center; padding: 20px; border: 2px dashed #008282;">
         <p>Progreso guardado automáticamente por 90 días.</p>
         <input type="text" id="user-id" placeholder="Nombre de Estudiante..." style="padding:8px; width:250px;">
@@ -113,7 +115,7 @@ th { background: #008282; color: white; }
         <div class="columna-izquierda">
             <div class="pantalla-verde" onclick="document.getElementById('input-oculto').focus()">
                 <input type="text" id="input-oculto" oninput="procesar()" autocomplete="off">
-                <div id="contenido-ejercicio">Haz clic en una lección para comenzar...</div>
+                <div id="contenido-ejercicio">Selecciona una lección para comenzar...</div>
             </div>
 
             <div id="instruccion-dedo" style="text-align:center; color:red; font-weight:bold; margin-bottom:12px; min-height: 24px; font-size: 18px;"></div>
