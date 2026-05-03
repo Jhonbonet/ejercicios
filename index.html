@@ -2,9 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>MecaMatic 4.0 ADN - Pro</title>
+<title>MecaMatic 4.0 ADN - Pro Cloud</title>
 <style>
-    /* Estilos base mantenidos */
     :root {
         --pinky: #FFFFC0; --ring: #C0FFC0; --middle: #C0FFFF;
         --index-l: #FFC0FF; --index-r: #FF96FF; --thumb: #FFC0C0;
@@ -12,63 +11,149 @@
         --text-typed: #000000;
     }
     body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display: flex; flex-direction: column; align-items: center; padding: 5px; margin: 0; }
-    #inicio, #app { width: 95%; max-width: 1100px; background: white; padding: 15px; border-radius: 8px; border: 1px solid #888; }
+    #inicio, #app { width: 95%; max-width: 1100px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid #888; }
     .hidden { display: none; }
+    .panel-info { display: flex; justify-content: space-between; background: #333; color: white; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 14px; align-items: center; }
     .pantalla-verde { 
         font-size: 26px; background-color: var(--board-bg); color: var(--text-untyped); 
-        border: 4px inset #004d40; padding: 15px; min-height: 100px; position: relative; 
+        border: 4px inset #004d40; padding: 15px; margin-bottom: 10px; min-height: 100px; 
+        display: flex; align-items: flex-start; overflow: hidden; letter-spacing: 1px; 
+        white-space: pre-wrap; line-height: 1.2; position: relative; cursor: text; word-wrap: break-word;
     }
-    #input-oculto { position: absolute; opacity: 0; }
+    #input-oculto { position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; }
     .letra-hecha { color: var(--text-typed); opacity: 0.6; }
     .letra-guia { background-color: var(--guia); color: white !important; animation: blinker 0.6s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.3; } }
-    @keyframes blinker-key { 50% { background-color: #ff0000 !important; color: white; transform: scale(1.05); } }
+    @keyframes blinker-key { 50% { background-color: #ff0000; color: white; transform: scale(1.05); } }
     .tecla-activa { animation: blinker-key 0.6s linear infinite !important; z-index: 10; border: 2px solid black !important; }
-    .tecla { width: 48px; height: 50px; background: white; border: 1px solid #000; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 11px; border-radius: 6px; }
-    /* ... (resto de estilos de teclado iguales al anterior) */
+    .contenedor-principal { display: flex; gap: 15px; }
+    .columna-izquierda { flex: 2.5; }
+    .sidebar-derecha { flex: 1; background: #f0f0f0; border: 2px solid #008282; border-radius: 8px; padding: 10px; height: 75vh; overflow-y: auto; }
+    .teclado-container { background: #444; padding: 12px; border-radius: 12px; border: 4px solid #222; user-select: none; }
+    .fila-teclado { display: flex; justify-content: center; gap: 4px; margin-bottom: 5px; }
+    .tecla { width: 48px; height: 50px; background: white; border: 1px solid #000; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: bold; font-size: 11px; border-radius: 6px; box-shadow: 2px 3px 0px #111; }
+    .tecla.enter { width: 100px; background: #888; color: white; }
+    .tecla.espacio { width: 350px; background: var(--thumb); }
+    .m-izq { background: var(--pinky); } .a-izq { background: var(--ring); } .med-izq { background: var(--middle); } .i-izq { background: var(--index-l); }
+    .i-der { background: var(--index-r); } .med-der { background: var(--middle); } .a-der { background: var(--ring); } .m-der { background: var(--pinky); }
+    .btn-fase { padding: 8px; cursor: pointer; border: 2px solid #008282; background: #ddd; font-weight: bold; width: 100%; margin-bottom: 5px; }
+    .btn-fase.active { background: #008282; color: white; }
+    .lista-ejercicios { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 15px; }
+    .btn-ejer { font-size: 10px; padding: 5px; cursor: pointer; border: 1px solid #aaa; text-align: center; background: white; border-radius: 4px; }
+    .btn-ejer.completado { background: #28a745 !important; color: white; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+    th, td { border: 1px solid #888; padding: 6px; text-align: center; }
+    th { background: #008282; color: white; }
 </style>
 </head>
 <body>
 
 <div id="inicio">
     <h1 style="color:#008282; text-align:center;">MecaMatic 4.0 ADN</h1>
-    <div style="text-align:center; padding: 20px;">
-        <input type="text" id="user-id" placeholder="Nombre del Estudiante...">
-        <button onclick="login()">INGRESAR</button>
+    <div style="text-align:center; padding: 20px; border: 2px dashed #008282;">
+        <input type="text" id="user-id" placeholder="Nombre del Estudiante..." style="padding:10px; width:250px; font-size: 16px;">
+        <button onclick="login()" style="background:#008282; color:white; padding:10px 25px; border:none; cursor:pointer; font-weight:bold;">INGRESAR</button>
     </div>
 </div>
 
 <div id="app" class="hidden">
-    <div class="panel-info" style="display:flex; justify-content:space-between; background:#333; color:white; padding:10px;">
-        <span id="display-user"></span>
-        <div style="color: #5cb85c;">TIEMPO: <span id="timer">00:00</span></div>
+    <div class="panel-info">
+        <div>
+            <button onclick="abrirLogros()" style="background:#008282; color:white; border:none; padding:5px 10px; cursor:pointer; font-weight:bold;">LOGROS</button>
+            <button onclick="logout()" style="background:#d9534f; color:white; border:none; padding:5px 10px; cursor:pointer; font-weight:bold; margin-left:5px;">SALIR</button>
+            <span id="display-user" style="margin-left:10px; font-weight:bold;"></span>
+        </div>
+        <div style="font-size: 18px; color: #5cb85c;">TIEMPO: <span id="timer">00:00</span></div>
         <div>ERRORES: <span id="err-count">0</span>/5</div>
     </div>
-    <div class="pantalla-verde" onclick="document.getElementById('input-oculto').focus()">
-        <input type="text" id="input-oculto" oninput="procesar()" onkeydown="teclaEnter(event)">
-        <div id="contenido-ejercicio"></div>
+
+    <div class="contenedor-principal">
+        <div class="columna-izquierda">
+            <div class="pantalla-verde" onclick="document.getElementById('input-oculto').focus()">
+                <input type="text" id="input-oculto" oninput="procesar()" onkeydown="teclaEnter(event)" autocomplete="off">
+                <div id="contenido-ejercicio">Selecciona un ejercicio...</div>
+            </div>
+            <div id="instruccion-dedo" style="text-align:center; color:#333; font-weight:bold; margin-bottom:10px; font-size: 18px; min-height: 24px;"></div>
+
+            <div class="teclado-container" id="teclado-visual">
+                <div class="fila-teclado">
+                    <div class="tecla m-izq" id="key-º">º</div><div class="tecla m-izq" id="key-1">1</div><div class="tecla m-izq" id="key-2">2</div><div class="tecla a-izq" id="key-3">3</div><div class="tecla med-izq" id="key-4">4</div><div class="tecla i-izq" id="key-5">5</div><div class="tecla i-izq" id="key-6">6</div><div class="tecla i-der" id="key-7">7</div><div class="tecla i-der" id="key-8">8</div><div class="tecla med-der" id="key-9">9</div><div class="tecla a-der" id="key-0">0</div><div class="tecla m-der" id="key-'">'</div><div class="tecla m-der" id="key-¡">¡</div>
+                </div>
+                <div class="fila-teclado">
+                    <div class="tecla" style="width:60px">TAB</div>
+                    <div class="tecla m-izq" id="key-Q">Q</div><div class="tecla a-izq" id="key-W">W</div><div class="tecla med-izq" id="key-E">E</div><div class="tecla i-izq" id="key-R">R</div><div class="tecla i-izq" id="key-T">T</div><div class="tecla i-der" id="key-Y">Y</div><div class="tecla i-der" id="key-U">U</div><div class="tecla med-der" id="key-I">I</div><div class="tecla a-der" id="key-O">O</div><div class="tecla m-der" id="key-P">P</div><div class="tecla m-der" id="key-´">´</div><div class="tecla m-der" id="key-^">^</div>
+                </div>
+                <div class="fila-teclado">
+                    <div class="tecla" style="width:80px">BLOQ</div>
+                    <div class="tecla m-izq" id="key-A">A</div><div class="tecla a-izq" id="key-S">S</div><div class="tecla med-izq" id="key-D">D</div><div class="tecla i-izq" id="key-F">F</div><div class="tecla i-izq" id="key-G">G</div><div class="tecla i-der" id="key-H">H</div><div class="tecla i-der" id="key-J">J</div><div class="tecla med-der" id="key-K">K</div><div class="tecla a-der" id="key-L">L</div><div class="tecla m-der" id="key-Ñ">Ñ</div><div class="tecla m-der" id="key-¨">¨</div>
+                    <div class="tecla enter" id="key-ENTER">ENTER</div>
+                </div>
+                <div class="fila-teclado">
+                    <div class="tecla" id="key-SHIFT-L" style="width:100px">SHIFT</div>
+                    <div class="tecla m-izq" id="key-<"><</div><div class="tecla m-izq" id="key-Z">Z</div><div class="tecla a-izq" id="key-X">X</div><div class="tecla med-izq" id="key-C">C</div><div class="tecla i-izq" id="key-V">V</div><div class="tecla i-izq" id="key-B">B</div><div class="tecla i-der" id="key-N">N</div><div class="tecla i-der" id="key-M">M</div><div class="tecla med-der" id="key-,">,</div><div class="tecla a-der" id="key-.">.</div><div class="tecla m-der" id="key--">-</div>
+                    <div class="tecla" id="key-SHIFT-R" style="width:100px">SHIFT</div>
+                </div>
+                <div class="fila-teclado">
+                    <div class="tecla espacio" id="key- "> </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-derecha">
+            <button class="btn-fase active" onclick="cambiarFase(1)">1. APRENDIZAJE</button>
+            <button class="btn-fase" onclick="cambiarFase(2)">2. PRÁCTICA</button>
+            <button class="btn-fase" onclick="cambiarFase(3)">3. PERFECCIONAMIENTO</button>
+            <div id="acordeon-lecciones"></div>
+        </div>
     </div>
-    <div id="instruccion-dedo" style="text-align:center; font-weight:bold; margin:10px;"></div>
+</div>
+
+<div id="modal-logros" class="hidden" style="position:fixed; background:rgba(0,0,0,0.8); top:0; left:0; width:100%; height:100%; z-index:1000; display:none;">
+    <div style="background:white; margin:50px auto; width:90%; max-width:850px; padding:20px; border-radius:10px; max-height:80vh; overflow-y:auto;">
+        <h2 style="color:#008282;">HISTORIAL EN LA NUBE</h2>
+        <table id="tabla-logros">
+            <thead>
+                <tr><th>Ejer</th><th>PPM Brutas</th><th>PPM Netas</th><th>Errores</th><th>Precisión</th><th>Fecha</th></tr>
+            </thead>
+            <tbody id="lista-logros-body"></tbody>
+        </table>
+        <button onclick="cerrarLogros()" style="width:100%; padding:12px; margin-top:15px; background:#444; color:white; border:none; cursor:pointer;">CERRAR</button>
     </div>
+</div>
 
 <script>
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx06fFp8LrUC-8XN3iEBaPtFW_dJCmp_5Tx2VlBsoP0wQwoiHv7tGfw2-AEcpVeU-spSQ/exec";
-const BASE_URL_NUBE = "https://raw.githubusercontent.com/Jhonbonet/ejercicios/main/";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx06fFp8LrUC-8XN3iEBaPtFW_dJCmp_5Tx2VlBsoP0wQwoiHv7tGfw2-AEcpVeU-spSQ/exec"; 
+const BASE_URL_NUBE = "https://raw.githubusercontent.com/Jhonbonet/ejercicios/main/"; 
 
-let currentUser = "", progresoCargado = {}, textoActivo = "", ejercicioActual = 0;
-let erroresContador = 0, tInicio = null, timerInterval = null, esperandoInicio = false;
+let currentUser = "", faseActual = 1, textoActivo = "", ejercicioActual = 0;
+let erroresContador = 0, tInicio = null, esperandoInicio = false;
+let timerSecs = 0, timerInterval = null, audioCtx = null;
+let progresoCargado = {};
+
+const mapaDedos = { 'q':'MEÑIQUE IZQ', 'a':'MEÑIQUE IZQ', 'z':'MEÑIQUE IZQ', '1':'MEÑIQUE IZQ', 'w':'ANULAR IZQ', 's':'ANULAR IZQ', 'x':'ANULAR IZQ', '2':'ANULAR IZQ', 'e':'MEDIO IZQ', 'd':'MEDIO IZQ', 'c':'MEDIO IZQ', '3':'MEDIO IZQ', 'r':'ÍNDICE IZQ', 'f':'ÍNDICE IZQ', 'v':'ÍNDICE IZQ', '4':'ÍNDICE IZQ', 't':'ÍNDICE IZQ', 'g':'ÍNDICE IZQ', 'b':'ÍNDICE IZQ', '5':'ÍNDICE IZQ', 'y':'ÍNDICE DER', 'h':'ÍNDICE DER', 'n':'ÍNDICE DER', '6':'ÍNDICE DER', 'u':'ÍNDICE DER', 'j':'ÍNDICE DER', 'm':'ÍNDICE DER', '7':'ÍNDICE DER', 'i':'MEDIO DER', 'k':'MEDIO DER', ',':'MEDIO DER', '8':'MEDIO DER', 'o':'ANULAR DER', 'l':'ANULAR DER', '.':'ANULAR DER', '9':'ANULAR DER', 'p':'MEÑIQUE DER', 'ñ':'MEÑIQUE DER', '0':'MEÑIQUE DER', ' ':'PULGAR' };
+
+function iniciarAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+function sonar(frec, tipo, dur) {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+    osc.type = tipo; osc.frequency.setValueAtTime(frec, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + dur);
+}
 
 async function login() {
     currentUser = document.getElementById('user-id').value.trim().toUpperCase();
     if(!currentUser) return alert("Ingresa tu nombre");
-    
-    // SINCRONIZACIÓN NUBE: Carga historial de cualquier dispositivo
+    iniciarAudio();
+
+    // SINCRONIZACIÓN NUBE: Descargar historial del servidor al iniciar
+    document.getElementById('display-user').innerText = "SINCRONIZANDO...";
     try {
-        const response = await fetch(`${WEB_APP_URL}?action=load&user=${currentUser}`);
-        progresoCargado = await response.json();
-        localStorage.setItem('mecamatic_v4_' + currentUser, JSON.stringify(progresoCargado));
+        const resp = await fetch(`${WEB_APP_URL}?action=load&user=${currentUser}`);
+        progresoCargado = await resp.json();
     } catch(e) {
-        console.log("Modo offline: Cargando local");
         const saved = localStorage.getItem('mecamatic_v4_' + currentUser);
         progresoCargado = saved ? JSON.parse(saved) : {};
     }
@@ -76,47 +161,173 @@ async function login() {
     document.getElementById('display-user').innerText = "ESTUDIANTE: " + currentUser;
     document.getElementById('inicio').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
-    renderizarMenu(); 
+    cambiarFase(1);
 }
 
-function resaltarTeclasEspeciales(char) {
+function logout() { location.reload(); }
+
+function cambiarFase(n) {
+    faseActual = n;
+    document.querySelectorAll('.btn-fase').forEach((b, i) => b.classList.toggle('active', i+1 === n));
+    renderizarMenu();
+}
+
+function renderizarMenu() {
+    const cont = document.getElementById('acordeon-lecciones');
+    cont.innerHTML = "";
+    for(let l=1; l<=10; l++) {
+        cont.innerHTML += `<div style="background:#008282; color:white; padding:5px; font-size:12px; margin-top:5px; font-weight:bold;">LECCIÓN ${l}</div>`;
+        let grid = document.createElement('div'); grid.className = "lista-ejercicios";
+        for(let e=1; e<=10; e++) {
+            let id = ((faseActual-1)*100) + ((l-1)*10) + e;
+            let esCompletado = progresoCargado[id] ? "completado" : "";
+            grid.innerHTML += `<div class="btn-ejer ${esCompletado}" id="ejer-${id}" onclick="cargarEjercicio(${id}, ${l})">${e}</div>`;
+        }
+        cont.appendChild(grid);
+    }
+}
+
+async function cargarEjercicio(id, numLeccion) {
+    try {
+        const res = await fetch(`${BASE_URL_NUBE}${id}.txt`);
+        const buffer = await res.arrayBuffer();
+        textoActivo = new TextDecoder('windows-1252').decode(buffer).replace(/\r/g, "").trim();
+        ejercicioActual = id; erroresContador = 0;
+        document.getElementById('err-count').innerText = "0";
+        document.getElementById('contenido-ejercicio').innerHTML = "<span style='color:red;'>PULSE [ENTER] PARA COMENZAR</span>";
+        
+        timerSecs = (faseActual === 1 && numLeccion <= 5) ? 720 : 420;
+        if (faseActual > 1) timerSecs = 600;
+
+        actualizarReloj();
+        esperandoInicio = true; document.getElementById('input-oculto').focus();
+        resaltarTeclaDual("ENTER");
+    } catch(e) { alert("Error cargando lección."); }
+}
+
+function teclaEnter(e) {
+    if(esperandoInicio && e.key === "Enter") {
+        esperandoInicio = false; document.getElementById('input-oculto').value = "";
+        tInicio = new Date(); iniciarTimer(); actualizarTablero(0);
+        sonar(600, 'sine', 0.1);
+    }
+}
+
+function iniciarTimer() {
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        timerSecs--; actualizarReloj();
+        if(timerSecs <= 0) {
+            clearInterval(timerInterval);
+            sonar(150, 'sawtooth', 0.5);
+            alert("TIEMPO AGOTADO"); logout();
+        }
+    }, 1000);
+}
+
+function actualizarReloj() {
+    let m = Math.floor(timerSecs / 60); let s = timerSecs % 60;
+    document.getElementById('timer').innerText = `${m}:${s < 10 ? '0'+s : s}`;
+}
+
+// LÓGICA DE RESALTADO DUAL (Shift + Letra / Tilde + Letra)
+function resaltarTeclaDual(char) {
     document.querySelectorAll('.tecla').forEach(t => t.classList.remove('tecla-activa'));
     
-    // Lógica de Doble Tecla (Mayúsculas o Tildes)
-    if (char === char.toUpperCase() && char !== char.toLowerCase() && char !== " ") {
-        document.getElementById('key-SHIFT-L').classList.add('tecla-activa'); // Sugiere Shift
+    if(char === "ENTER") {
+        document.getElementById('key-ENTER').classList.add('tecla-activa');
+        return;
     }
-    
-    let keyId = char.toUpperCase();
-    if (char === "á") { document.getElementById('key-´').classList.add('tecla-activa'); keyId = "A"; }
-    if (char === "é") { document.getElementById('key-´').classList.add('tecla-activa'); keyId = "E"; }
-    // ... repetir para í, ó, ú
-    
-    const tecla = document.getElementById('key-' + keyId);
+
+    // 1. Detectar si es Mayúscula (requiere Shift)
+    if (char !== " " && char === char.toUpperCase() && char !== char.toLowerCase()) {
+        const manoDedo = mapaDedos[char.toLowerCase()];
+        if (manoDedo && manoDedo.includes("DER")) {
+            document.getElementById('key-SHIFT-L').classList.add('tecla-activa');
+        } else {
+            document.getElementById('key-SHIFT-R').classList.add('tecla-activa');
+        }
+    }
+
+    // 2. Detectar si requiere tildes
+    const tildes = {'á':'A', 'é':'E', 'í':'I', 'ó':'O', 'ú':'U', 'Á':'A', 'É':'E', 'Í':'I', 'Ó':'O', 'Ú':'U'};
+    if (tildes[char]) {
+        document.getElementById('key-´').classList.add('tecla-activa');
+        char = tildes[char]; // Para resaltar la letra base también
+    }
+
+    // 3. Resaltar la tecla principal
+    let id = char.toUpperCase();
+    const tecla = document.getElementById('key-' + id);
     if(tecla) tecla.classList.add('tecla-activa');
+}
+
+function actualizarTablero(pos) {
+    const cont = document.getElementById('contenido-ejercicio');
+    cont.innerHTML = "";
+    for(let i=0; i<textoActivo.length; i++) {
+        let span = document.createElement("span");
+        span.innerText = textoActivo[i];
+        span.className = i < pos ? "letra-hecha" : (i === pos ? "letra-guia" : "");
+        cont.appendChild(span);
+    }
+    if(pos < textoActivo.length) {
+        let char = textoActivo[pos];
+        resaltarTeclaDual(char);
+        document.getElementById('instruccion-dedo').innerText = `DEDO: ${mapaDedos[char.toLowerCase()] || '---'}`;
+    }
+}
+
+function procesar() {
+    if(esperandoInicio) return;
+    const input = document.getElementById('input-oculto');
+    let val = input.value; let pos = val.length - 1;
+    
+    if(val[pos] === textoActivo[pos]) {
+        sonar(400, 'triangle', 0.03);
+        actualizarTablero(val.length);
+        if(val.length >= textoActivo.length) finalizar();
+    } else {
+        sonar(100, 'square', 0.15);
+        erroresContador++;
+        document.getElementById('err-count').innerText = erroresContador;
+        input.value = val.substring(0, pos);
+        if(erroresContador > 5) { alert("REPETIR EJERCICIO (Max 5 errores)"); location.reload(); }
+    }
 }
 
 function finalizar() {
     clearInterval(timerInterval);
     const tMin = (new Date() - tInicio) / 60000;
     const pBrutas = textoActivo.length;
-    // Cálculo solicitado: Coefi MEP y velocidad base
-    const ppmN = Math.round(((pBrutas - (erroresContador * 4)) / tMin)); 
+    const ppmB = Math.round(pBrutas / tMin);
+    // Fórmula solicitada (MEP): Netas = (Brutas - Errores*4) / Tiempo
+    const ppmN = Math.round((pBrutas - (erroresContador * 4)) / tMin);
     const prec = ((pBrutas - erroresContador) / pBrutas * 100).toFixed(2);
     const fecha = new Date().toLocaleDateString();
 
-    const params = `?action=save&user=${encodeURIComponent(currentUser)}&ejercicio=${ejercicioActual}&ppm_netas=${ppmN}&errores=${erroresContador}&precision=${prec}&fecha=${encodeURIComponent(fecha)}`;
-    
-    // Guardado local y en nube (sincronizado)
-    progresoCargado[ejercicioActual] = { ppmN, err: erroresContador, prec, fecha };
+    const result = { ppmB, ppmN, err: erroresContador, prec, fecha };
+    progresoCargado[ejercicioActual] = result;
     localStorage.setItem('mecamatic_v4_' + currentUser, JSON.stringify(progresoCargado));
     
+    // GUARDADO EN NUBE (Google Sheets)
+    const params = `?action=save&user=${encodeURIComponent(currentUser)}&ejercicio=${ejercicioActual}&ppm_netas=${ppmN}&errores=${erroresContador}&precision=${prec}&fecha=${encodeURIComponent(fecha)}`;
     fetch(WEB_APP_URL + params, { mode: 'no-cors' });
-    alert(`¡Ejercicio Superado!\nNetas: ${ppmN} PPM\nPrecisión: ${prec}%`);
-    location.reload();
+
+    alert(`¡EXCELENTE!\nNetas: ${ppmN} PPM\nPrecisión: ${prec}%`);
+    cambiarFase(faseActual);
 }
 
-// ... Resto de funciones (procesar, cargarEjercicio, teclaEnter) se mantienen igual
+function abrirLogros() {
+    const body = document.getElementById('lista-logros-body');
+    body.innerHTML = "";
+    Object.keys(progresoCargado).sort((a,b)=>a-b).forEach(id => {
+        let log = progresoCargado[id];
+        body.innerHTML += `<tr><td>${id}</td><td>${log.ppmB}</td><td>${log.ppmN}</td><td>${log.err}</td><td>${log.prec}%</td><td>${log.fecha}</td></tr>`;
+    });
+    document.getElementById('modal-logros').style.display = 'block';
+}
+function cerrarLogros() { document.getElementById('modal-logros').style.display = 'none'; }
 </script>
 </body>
 </html>
