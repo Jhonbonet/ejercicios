@@ -5,12 +5,12 @@
 <title>MecaMatic 3.0 - Sistema 300 Ejercicios</title>
 <style>
 :root {
-    --pinky: #FFFFC0;    /* Meñique */
-    --ring: #C0FFC0;     /* Anular */
-    --middle: #C0FFFF;   /* Medio */
-    --index-l: #FFC0FF;  /* Índice Izquierdo */
-    --index-r: #FF96FF;  /* Índice Derecho */
-    --thumb: #FFC0C0;    /* Pulgares */
+    --pinky: #FFFFC0;
+    --ring: #C0FFC0;
+    --middle: #C0FFFF;
+    --index-l: #FFC0FF;
+    --index-r: #FF96FF;
+    --thumb: #FFC0C0;
     --guia: #ff0000;
     --board-bg: #008282;
     --text-untyped: #ffffff;
@@ -21,21 +21,29 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 #inicio, #app { width: 95%; max-width: 1100px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid #888; }
 .hidden { display: none; }
 
-/* PANTALLA VERDE OPTIMIZADA */
+/* PANTALLA VERDE - AJUSTE DE ALTURA Y POSICIÓN DEL TEXTO */
 .pantalla-verde { 
-    font-size: 22px; /* Reducido ligeramente para que quepa más texto */
+    font-size: 22px; 
     background-color: var(--board-bg); 
     color: var(--text-untyped); 
     border: 4px inset #004d40; 
-    padding: 10px 15px; 
-    height: 135px; /* Altura solicitada */
-    overflow: hidden; /* Sin barras de desplazamiento */
+    padding: 2px 15px; /* Padding superior casi nulo para subir el texto */
+    height: 135px; 
+    overflow: hidden; 
     letter-spacing: 1px; 
     white-space: pre-wrap; 
-    line-height: 1.0; /* Espaciado mínimo para que el texto suba */
+    line-height: 0.9; /* Interlineado ultra compacto para que el texto suba */
     position: relative; 
     margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start; /* Asegura que el contenido empiece arriba */
 }
+
+#contenido-ejercicio {
+    width: 100%;
+    margin-top: 0; /* Elimina cualquier margen superior */
+}
+
 #input-oculto { position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; }
 .letra-hecha { color: var(--text-typed); }
 .letra-guia { background-color: var(--guia); color: white !important; animation: blinker 0.8s linear infinite; }
@@ -88,7 +96,7 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 <div id="app" class="hidden">
     <div class="contenedor-principal">
         <div class="columna-izquierda">
-            <div class="pantalla-verde" id="contenedor-texto" onclick="document.getElementById('input-oculto').focus()">
+            <div class="pantalla-verde" onclick="document.getElementById('input-oculto').focus()">
                 <input type="text" id="input-oculto" oninput="procesar()" autocomplete="off">
                 <div id="contenido-ejercicio">Selecciona una lección...</div>
             </div>
@@ -168,7 +176,6 @@ async function cargarEjercicioNube(id) {
     try {
         const res = await fetch(`${BASE_URL_NUBE}${id}.txt?t=${new Date().getTime()}`);
         const buffer = await res.arrayBuffer();
-        // Mantenemos la codificación correcta para la Ñ y tildes
         textoActivo = new TextDecoder('windows-1252').decode(buffer).replace(/\r/g, "").trim();
         ejercicioActual = id;
         document.getElementById('input-oculto').value = "";
