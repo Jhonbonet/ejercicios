@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>MecaMatic 3.0 - Sistema 300 Ejercicios</title>
+<style>
+:root {
+    --pinky: #FFFFC0; --ring: #C0FFC0; --middle: #C0FFFF;
+    --index-l: #FFC0FF; --index-r: #FF96FF; --thumb: #FFC0C0;
+    --guia: #ff0000; --board-bg: #008282;
+    --text-untyped: #ffffff; --text-typed: #000000;
+}
+body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display: flex; flex-direction: column; align-items: center; padding: 10px; margin: 0; }
+#inicio, #app { width: 95%; max-width: 1200px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+.hidden { display: none; }
+
+.contenedor-principal { display: flex; gap: 15px; height: 80vh; }
+.columna-izquierda { flex: 2.5; display: flex; flex-direction: column; gap: 10px; }
+
+/* Sidebar con scroll para 300 lecciones */
+.sidebar-derecha { flex: 1; background: #f4f4f4; border: 2px solid #008282; border-radius: 8px; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+
+.pantalla-verde { 
+    font-size: 24px; background-color: var(--board-bg); color: var(--text-untyped); 
+    border: 3px solid #004d40; padding: 15px; height: 120px; overflow: hidden; 
+    letter-spacing: 2px; white-space: pre-wrap; line-height: 1.1; position: relative; 
+}
+#input-oculto { position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; }
+.letra-hecha { color: var(--text-typed); }
+.letra-guia { background-color: var(--guia); color: white !important; animation: blinker 0.8s linear infinite; }
+@keyframes blinker { 50% { opacity: 0; } }
+
+.menu-fases { display: flex; gap: 5px; margin-bottom: 10px; }
+.btn-fase { padding: 8px; cursor: pointer; flex: 1; border: 1px solid #008282; background: white; font-weight: bold; }
+.btn-fase.active { background: #008282; color: white; }
+
+.lista-ejercicios { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+.btn-ejer { font-size: 10px; padding: 5px; cursor: pointer; border: 1px solid #ccc; text-align: center; }
+.btn-ejer.done { background: #c0ffc0; border-color: green; }
+.btn-ejer.active { background: #ffc0c0; border-color: red; }
+
+#instruccion-dedo { text-align: center; font-weight: bold; color: red; font-size: 16px; }
+.contenedor-teclado { background: #a0a0a0; padding: 8px; border-radius: 8px; }
+.tecla { height: 35px; min-width: 32px; border: 1px solid #555; background: #fff; font-size: 10px; display: flex; justify-content: center; align-items: center; }
+.active-tecla { background-color: var(--guia) !important; color: white !important; }
+</style>
+</head>
+<body>
+
+<div id="inicio">
+    <h1>MecaMatic 3.0</h1>
+    <p>Nombre de Usuario: <input type="text" id="user-id"> <button onclick="login()">ENTRAR</button></p>
+</div>
+
+<div id="app" class="hidden">
+    <div class="menu-fases">
+        <button class="btn-fase active" id="fase-1" onclick="cambiarFase(1)">1. Aprendizaje</button>
+        <button class="btn-fase" id="fase-2" onclick="cambiarFase(2)">2. Práctica</button>
+        <button class="btn-fase" id="fase-3" onclick="cambiarFase(3)">3. Perfeccionamiento</button>
+    </div>
+
+    <div class="contenedor-principal">
+        <div class="columna-izquierda">
+            <div class="pantalla-verde" onclick="document.getElementById('input-oculto').focus()">
+                <input type="text" id="input-oculto" oninput="procesar()" autocomplete="off">
+                <div id="contenido-ejercicio">Seleccione un ejercicio...</div>
+            </div>
+            <div id="instruccion-dedo">LISTO PARA COMENZAR</div>
+            <div class="contenedor-teclado" id="teclado-visual">
+                <!-- Teclado simplificado para el ejemplo -->
+                <div style="display:flex; justify-content: center; gap:2px;">
+                    <div class="tecla" id="K-A">A</div><div class="tecla" id="K-S">S</div><div class="tecla" id="K-D">D</div><div class="tecla" id="K-F">F</div>
+                    <div class="tecla" id="K-J">J</div><div class="tecla" id="K-K">K</div><div class="tecla" id="K-L">L</div><div class="tecla" id="K-Ñ">Ñ</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-derecha">
+            <h3 style="font-size: 14px; color: #008282;">LECCIONES (10 EJERCICIOS C/U)</h3>
+            <div id="acordeon-lecciones"></div>
+            <hr>
+            <div id="panel-stats">
+                <strong>Resultados:</strong>
+                <div id="res-actual">--</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// CONFIGURACIÓN DE LA NUBE
+const BASE_URL_NUBE = "https://github.com/Jhonbonet/ejercicios"; 
+
+let currentUser = "";
+let faseActual = 1; // 1: Aprendizaje, 2: Práctica, 3: Perfec.
+let leccionActual = 1;
+let ejercicioActual = 1;
+let textoActivo = "";
+let tInicio = null;
+
+function login() {
+    currentUser = document.getElementById('user-id').value;
+    if(!currentUser) return;
+    document.getElementById('inicio').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    cambiarFase(1);
+}
+
+function cambiarFase(num) {
+    faseActual = num;
+    document.querySelectorAll('.btn-fase').forEach(b => b.classList.remove('active'));
+    document.getElementById(`fase-${num}`).classList.add('active');
+    renderizarMenuLecciones();
+}
+
+function renderizarMenuLecciones() {
+    const contenedor = document.getElementById('acordeon-lecciones');
+    contenedor.innerHTML = "";
+    
+    // 10 lecciones por fase
+    for(let l = 1; l <= 10; l++) {
+        let divLeccion = document.createElement("div");
+        divLeccion.innerHTML = `<strong>Lección ${l}</strong>`;
+        let grid = document.createElement("div");
+        grid.className = "lista-ejercicios";
+        
+        // 10 ejercicios por lección
+        for(let e = 1; e <= 10; e++) {
+            let numArchivo = calcularNumeroArchivo(faseActual, l, e);
+            let btn = document.createElement("div");
+            btn.className = "btn-ejer";
+            btn.innerText = e;
+            
+            // Marcar si ya fue realizado según LocalStorage
+            if(localStorage.getItem(`${currentUser}_ex_${numArchivo}`)) {
+                btn.classList.add("done");
+                btn.innerText += "✓";
+            }
+            
+            btn.onclick = () => cargarEjercicioNube(numArchivo, l, e);
+            grid.appendChild(btn);
+        }
+        contenedor.appendChild(divLeccion);
+        contenedor.appendChild(grid);
+    }
+}
+
+function calcularNumeroArchivo(fase, lecc, ejer) {
+    let offset = (fase - 1) * 100;
+    return offset + ((lecc - 1) * 10) + ejer;
+}
+
+async function cargarEjercicioNube(idArchivo, lecc, ejer) {
+    const pantalla = document.getElementById('contenido-ejercicio');
+    pantalla.innerText = "Cargando archivo " + idArchivo + ".txt...";
+    
+    try {
+        const respuesta = await fetch(`${BASE_URL_NUBE}${idArchivo}.txt`);
+        if(!respuesta.ok) throw new Error("No se encontró el archivo");
+        textoActivo = await respuesta.text();
+        
+        ejercicioActual = idArchivo;
+        leccionActual = lecc;
+        
+        document.getElementById('input-oculto').value = "";
+        tInicio = null;
+        actualizarTablero(0);
+        document.getElementById('input-oculto').focus();
+    } catch (error) {
+        pantalla.innerText = "Error: Asegúrate de que " + idArchivo + ".txt existe en la nube.";
+    }
+}
+
+function actualizarTablero(pos) {
+    const cont = document.getElementById('contenido-ejercicio');
+    cont.innerHTML = "";
+    for (let i = 0; i < textoActivo.length; i++) {
+        let span = document.createElement("span");
+        span.innerText = textoActivo[i];
+        span.className = i < pos ? "letra-hecha" : (i === pos ? "letra-guia" : "letra-pendiente");
+        cont.appendChild(span);
+    }
+}
+
+function procesar() {
+    if (!tInicio) tInicio = new Date();
+    const val = document.getElementById('input-oculto').value;
+    actualizarTablero(val.length);
+    
+    if (val.length >= textoActivo.length) {
+        finalizar();
+    }
+}
+
+function finalizar() {
+    const val = document.getElementById('input-oculto').value;
+    let errores = 0;
+    for (let i = 0; i < val.length; i++) if (val[i] !== textoActivo[i]) errores++;
+    
+    const pBrutas = val.length;
+    const pNetas = pBrutas - (errores * 4);
+    
+    // Guardar en LocalStorage para marcarlo como hecho
+    localStorage.setItem(`${currentUser}_ex_${ejercicioActual}`, "completado");
+    
+    alert(`Ejercicio ${ejercicioActual} Grabado con éxito.\nNetas: ${pNetas}\nErrores: ${errores}`);
+    
+    // Refrescar menú para mostrar el checkmark
+    renderizarMenuLecciones();
+}
+</script>
+</body>
+</html>
