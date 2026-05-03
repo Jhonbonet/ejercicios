@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>MecaMatic 4.0 ADN- Sistema Profesional</title>
+<title>MecaMatic 3.0 - Sistema Profesional</title>
 <style>
 :root {
     --pinky: #FFFFC0; --ring: #C0FFC0; --middle: #C0FFFF;
@@ -15,26 +15,26 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 #inicio, #app { width: 95%; max-width: 1100px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid #888; }
 .hidden { display: none; }
 
-/* PANTALLA DE TEXTO - ACTUALIZADA A ALTURA AUTOMÁTICA */
+/* PANTALLA DE TEXTO - AJUSTE DE MÁRGENES SOLICITADO */
 .pantalla-verde { 
     font-size: 22px; 
     background-color: var(--board-bg); 
     color: var(--text-untyped); 
     border: 4px inset #004d40; 
-    padding: 15px; 
-    min-height: 135px; /* Altura mínima inicial */
-    height: auto;      /* Se expande si el texto es largo */
+    padding: 2px 15px 15px 15px; /* 2px arriba, 15px a los lados y abajo */
+    min-height: 135px; 
+    height: auto;      
     overflow: hidden; 
     letter-spacing: 1px; 
     white-space: pre-wrap; 
-    line-height: 28px; 
+    line-height: 25px; 
     position: relative; 
     margin-bottom: 10px; 
     display: block; 
     cursor: text;
     word-wrap: break-word;
 }
-#contenido-ejercicio { width: 100%; }
+#contenido-ejercicio { width: 100%; margin: 0; padding: 0; }
 #input-oculto { position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; }
 .letra-hecha { color: var(--text-typed); }
 .letra-guia { background-color: var(--guia); color: white !important; animation: blinker 0.8s linear infinite; }
@@ -86,11 +86,11 @@ th { background: #008282; color: white; }
 <body onload="limpiarUsuariosAntiguos()">
 
 <div id="inicio">
-    <h1 style="color:#008282; text-align:center;">MecaMatic 4.0 ADN</h1>
+    <h1 style="color:#008282; text-align:center;">MecaMatic 3.0</h1>
     <div style="text-align:center; padding: 20px; border: 2px dashed #008282;">
-        <p>Progreso guardado automáticamente por 90 días.</p>
+        <p>Identifícate para cargar tu progreso (Guardado por 90 días)</p>
         <input type="text" id="user-id" placeholder="Nombre de Estudiante..." style="padding:8px; width:250px;">
-        <button onclick="login()" style="background:#008282; color:white; padding:9px 20px; border:none; cursor:pointer; font-weight:bold;">INGRESAR</button>
+        <button onclick="login()" style="background:#008282; color:white; padding:9px 20px; border:none; cursor:pointer; font-weight:bold;">ENTRAR</button>
     </div>
 </div>
 
@@ -98,7 +98,7 @@ th { background: #008282; color: white; }
     <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <div>
             <button onclick="mostrarHistorial()" style="background:#444; color:white; padding:8px 15px; border:none; cursor:pointer; border-radius:4px;">VER LOGROS</button>
-            <button onclick="logout()" style="background:#d9534f; color:white; padding:8px 15px; border:none; cursor:pointer; border-radius:4px; margin-left: 10px;">CERRAR SESIÓN</button>
+            <button onclick="logout()" style="background:#d9534f; color:white; padding:8px 15px; border:none; cursor:pointer; border-radius:4px; margin-left: 10px;">CAMBIAR USUARIO</button>
         </div>
         <div style="text-align: right;">
             <span id="display-user" style="font-weight:bold; margin-right: 20px; color:#008282;"></span>
@@ -110,7 +110,7 @@ th { background: #008282; color: white; }
         <div class="columna-izquierda">
             <div class="pantalla-verde" onclick="document.getElementById('input-oculto').focus()">
                 <input type="text" id="input-oculto" oninput="procesar()" autocomplete="off">
-                <div id="contenido-ejercicio">Haz clic en una lección del panel derecho para comenzar...</div>
+                <div id="contenido-ejercicio">Selecciona una lección para iniciar...</div>
             </div>
 
             <div id="instruccion-dedo" style="text-align:center; color:red; font-weight:bold; margin-bottom:12px; min-height: 24px; font-size: 18px;"></div>
@@ -144,11 +144,11 @@ th { background: #008282; color: white; }
 </div>
 
 <div id="modal-historial">
-    <h2 style="color:#008282; margin-top:0;">Historial de Logros</h2>
+    <h2 style="color:#008282; margin-top:0;">Logros del Estudiante</h2>
     <table>
         <thead>
             <tr>
-                <th>Ejercicio</th><th>P. Brutas</th><th>Errores</th><th>P. Netas</th><th>PPM</th><th>Fecha</th>
+                <th>Ejercicio</th><th>Brutas</th><th>Err</th><th>Netas</th><th>PPM</th><th>Fecha</th>
             </tr>
         </thead>
         <tbody id="cuerpo-historial"></tbody>
@@ -175,13 +175,11 @@ const mapaDedos = {
 
 function login() {
     currentUser = document.getElementById('user-id').value.trim().toLowerCase();
-    if(!currentUser) return alert("Por favor, ingresa tu nombre de estudiante.");
-    
+    if(!currentUser) return alert("Ingresa un nombre.");
     let accesos = JSON.parse(localStorage.getItem('meca_accesos') || "{}");
     accesos[currentUser] = Date.now();
     localStorage.setItem('meca_accesos', JSON.stringify(accesos));
-
-    document.getElementById('display-user').innerText = "ESTUDIANTE: " + currentUser.toUpperCase();
+    document.getElementById('display-user').innerText = "USUARIO: " + currentUser.toUpperCase();
     document.getElementById('inicio').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
     cambiarFase(1);
@@ -197,7 +195,6 @@ function limpiarUsuariosAntiguos() {
     const noventaDias = 90 * 24 * 60 * 60 * 1000;
     const ahora = Date.now();
     let accesos = JSON.parse(localStorage.getItem('meca_accesos') || "{}");
-    
     for (let user in accesos) {
         if (ahora - accesos[user] > noventaDias) {
             localStorage.removeItem(`meca_logs_${user}`);
@@ -217,7 +214,6 @@ function renderizarMenu() {
     const contenedor = document.getElementById('acordeon-lecciones');
     contenedor.innerHTML = "";
     const logs = JSON.parse(localStorage.getItem(`meca_logs_${currentUser}`) || "{}");
-
     for(let l = 1; l <= 10; l++) {
         let div = document.createElement("div");
         div.innerHTML = `<div style="background:#008282; color:white; padding:4px; margin-top:8px; font-size:12px; font-weight:bold;">LECCIÓN ${l}</div>`;
@@ -248,7 +244,7 @@ async function cargarEjercicio(id) {
         tInicio = new Date();
         actualizarTablero(0);
         document.getElementById('input-oculto').focus();
-    } catch (e) { alert("Ejercicio no encontrado en el servidor."); }
+    } catch (e) { alert("Error al cargar ejercicio."); }
 }
 
 function actualizarTablero(pos) {
@@ -263,7 +259,7 @@ function actualizarTablero(pos) {
     }
     if (pos < textoActivo.length) {
         let char = textoActivo[pos].toLowerCase();
-        ins.innerText = "TECLA [" + textoActivo[pos] + "] - DEDO: " + (mapaDedos[char] || "---");
+        ins.innerText = "TECLA [" + textoActivo[pos] + "] -> " + (mapaDedos[char] || "REVISAR");
     }
 }
 
@@ -271,15 +267,13 @@ function procesar() {
     const input = document.getElementById('input-oculto');
     let val = input.value;
     let posActual = val.length - 1;
-
     if (val.length > 0) {
         if (val[posActual] !== textoActivo[posActual]) {
             erroresContador++;
             document.getElementById('err-count').innerText = erroresContador;
             input.value = val.substring(0, posActual);
-            
             if (erroresContador > 5) {
-                alert("Superaste los 5 errores permitidos. El ejercicio se reiniciará.");
+                alert("Superaste los 5 errores. Reinicio.");
                 cargarEjercicio(ejercicioActual);
                 return;
             }
@@ -296,21 +290,14 @@ function finalizar() {
     const pBrutas = textoActivo.length;
     const pNetas = Math.max(0, pBrutas - (erroresContador * 4));
     const ppm = Math.round(pNetas / (minutos > 0 ? minutos : 1));
-
     const logro = {
-        ejercicio: ejercicioActual,
-        brutas: pBrutas,
-        errores: erroresContador,
-        netas: pNetas,
-        ppm: ppm,
-        fecha: new Date().toLocaleDateString()
+        ejercicio: ejercicioActual, brutas: pBrutas, errores: erroresContador,
+        netas: pNetas, ppm: ppm, fecha: new Date().toLocaleDateString()
     };
-
     let logs = JSON.parse(localStorage.getItem(`meca_logs_${currentUser}`) || "{}");
     logs[ejercicioActual] = logro;
     localStorage.setItem(`meca_logs_${currentUser}`, JSON.stringify(logs));
-
-    alert("¡Felicidades! Lograste " + ppm + " pulsaciones por minuto.");
+    alert("¡Completado! Velocidad: " + ppm + " PPM");
     renderizarMenu();
 }
 
