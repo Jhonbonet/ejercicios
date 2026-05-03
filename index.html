@@ -5,15 +5,9 @@
 <title>MecaMatic 3.0 - Sistema 300 Ejercicios</title>
 <style>
 :root {
-    --pinky: #FFFFC0;
-    --ring: #C0FFC0;
-    --middle: #C0FFFF;
-    --index-l: #FFC0FF;
-    --index-r: #FF96FF;
-    --thumb: #FFC0C0;
-    --guia: #ff0000;
-    --board-bg: #008282;
-    --text-untyped: #ffffff;
+    --pinky: #FFFFC0; --ring: #C0FFC0; --middle: #C0FFFF;
+    --index-l: #FFC0FF; --index-r: #FF96FF; --thumb: #FFC0C0;
+    --guia: #ff0000; --board-bg: #008282; --text-untyped: #ffffff;
     --text-typed: #000000;
 }
 
@@ -23,97 +17,88 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 
 /* PANTALLA VERDE */
 .pantalla-verde { 
-    font-size: 22px; 
-    background-color: var(--board-bg); 
-    color: var(--text-untyped); 
-    border: 4px inset #004d40; 
-    padding: 0px 15px; 
-    height: 135px; 
-    overflow: hidden; 
-    letter-spacing: 1px; 
-    white-space: pre-wrap; 
-    line-height: 22px; 
-    position: relative; 
-    margin-bottom: 10px;
-    display: flex;
+    font-size: 22px; background-color: var(--board-bg); color: var(--text-untyped); 
+    border: 4px inset #004d40; padding: 0px 15px; height: 135px; overflow: hidden; 
+    letter-spacing: 1px; white-space: pre-wrap; line-height: 22px; position: relative; 
+    margin-bottom: 10px; display: flex;
 }
-
 #contenido-ejercicio { width: 100%; margin-top: -4px; }
 #input-oculto { position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; }
 .letra-hecha { color: var(--text-typed); }
 .letra-guia { background-color: var(--guia); color: white !important; animation: blinker 0.8s linear infinite; }
 @keyframes blinker { 50% { opacity: 0; } }
 
-/* Layout */
+/* LAYOUT */
 .contenedor-principal { display: flex; gap: 15px; }
 .columna-izquierda { flex: 2.5; }
 .sidebar-derecha { flex: 1; background: #f0f0f0; border: 2px solid #008282; border-radius: 8px; padding: 10px; height: 82vh; overflow-y: auto; }
 
 /* TECLADO */
-.teclado-container { background: #999; padding: 15px; border-radius: 12px; border: 3px solid #444; user-select: none; }
+.teclado-container { background: #999; padding: 15px; border-radius: 12px; border: 3px solid #444; }
 .fila-teclado { display: flex; justify-content: center; gap: 4px; margin-bottom: 4px; }
 .tecla {
     width: 46px; height: 46px; background: white; border: 1px solid #000;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    display: flex; justify-content: center; align-items: center;
     font-weight: bold; font-size: 12px; border-radius: 5px; box-shadow: 2px 2px 0px #333;
 }
-.tecla.tab { width: 70px; }
-.tecla.caps { width: 80px; }
-.tecla.enter { width: 100px; flex-grow: 1; }
-.tecla.shift-l, .tecla.shift-r { width: 110px; }
 .tecla.espacio { width: 340px; background: var(--thumb); }
 
-/* Colores */
-.m-izq { background-color: var(--pinky); } .a-izq { background-color: var(--ring); }
-.med-izq { background-color: var(--middle); } .i-izq { background-color: var(--index-l); }
-.i-der { background-color: var(--index-r); } .med-der { background-color: var(--middle); }
-.a-der { background-color: var(--ring); } .m-der { background-color: var(--pinky); }
+/* MODAL HISTORIAL */
+#modal-historial {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: white; border: 3px solid #008282; padding: 20px; z-index: 100;
+    max-height: 80vh; overflow-y: auto; width: 80%; display: none; box-shadow: 0 0 50px rgba(0,0,0,0.5);
+}
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th, td { border: 1px solid #888; padding: 8px; text-align: center; }
+th { background: #008282; color: white; }
 
-/* Menu */
-.btn-fase { padding: 10px; cursor: pointer; border: 2px solid #008282; background: #ddd; font-weight: bold; margin-bottom: 5px; width: 100%; border-radius: 5px; }
+/* BOTONES */
+.btn-fase { padding: 10px; cursor: pointer; border: 2px solid #008282; background: #ddd; font-weight: bold; margin-bottom: 5px; width: 100%; }
 .btn-fase.active { background: #008282; color: white; }
-.lista-ejercicios { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 15px; }
 .btn-ejer { font-size: 10px; padding: 5px; cursor: pointer; border: 1px solid #aaa; text-align: center; background: white; }
-.btn-ejer.done { background: #c0ffc0; }
+.btn-ejer.done { background: #c0ffc0; border: 2px solid green; }
 </style>
 </head>
 <body>
 
 <div id="inicio">
-    <h1 style="color:#008282; text-align:center; margin:10px;">MecaMatic 3.0</h1>
-    <div style="text-align:center; padding: 15px; border: 2px dashed #008282;">
-        <label>Usuario:</label>
-        <input type="text" id="user-id">
-        <button onclick="login()" style="background:#008282; color:white; border:none; padding:5px 15px; cursor:pointer;">ENTRAR</button>
+    <h1 style="color:#008282; text-align:center;">MecaMatic 3.0</h1>
+    <div style="text-align:center; padding: 20px;">
+        <input type="text" id="user-id" placeholder="Nombre de Estudiante...">
+        <button onclick="login()" style="background:#008282; color:white; padding:8px 20px; border:none; cursor:pointer;">ENTRAR</button>
     </div>
 </div>
 
 <div id="app" class="hidden">
+    <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
+        <button onclick="mostrarHistorial()" style="background:#444; color:white; padding:5px 15px; cursor:pointer;">VER HISTORIAL DE LOGROS</button>
+        <div id="stats-live" style="font-weight:bold; color:#008282;">Errores: <span id="err-count">0</span>/5</div>
+    </div>
+
     <div class="contenedor-principal">
         <div class="columna-izquierda">
             <div class="pantalla-verde" onclick="document.getElementById('input-oculto').focus()">
                 <input type="text" id="input-oculto" oninput="procesar()" autocomplete="off">
-                <div id="contenido-ejercicio">Selecciona una lección...</div>
+                <div id="contenido-ejercicio">Selecciona una lección del menú derecho...</div>
             </div>
 
-            <div id="instruccion-dedo" style="text-align:center; color:red; font-weight:bold; margin-bottom:10px; height: 24px;">POSICIÓN INICIAL: ASDF - JKLÑ</div>
+            <div id="instruccion-dedo" style="text-align:center; color:red; font-weight:bold; margin-bottom:10px; height: 24px;"></div>
 
-            <div class="teclado-container">
+            <div class="teclado-container" id="teclado-visual">
                 <div class="fila-teclado">
-                    <div class="tecla m-izq">º</div><div class="tecla m-izq">1</div><div class="tecla m-izq">2</div><div class="tecla a-izq">3</div><div class="tecla med-izq">4</div><div class="tecla i-izq">5</div><div class="tecla i-izq">6</div><div class="tecla i-der">7</div><div class="tecla i-der">8</div><div class="tecla med-der">9</div><div class="tecla a-der">0</div><div class="tecla m-der">'</div><div class="tecla m-der">¡</div>
+                    <div class="tecla">Q</div><div class="tecla">W</div><div class="tecla">E</div><div class="tecla">R</div><div class="tecla">T</div>
+                    <div class="tecla">Y</div><div class="tecla">U</div><div class="tecla">I</div><div class="tecla">O</div><div class="tecla">P</div>
                 </div>
                 <div class="fila-teclado">
-                    <div class="tecla tab">Tab</div><div class="tecla m-izq">Q</div><div class="tecla a-izq">W</div><div class="tecla med-izq">E</div><div class="tecla i-izq">R</div><div class="tecla i-izq">T</div><div class="tecla i-der">Y</div><div class="tecla i-der">U</div><div class="tecla med-der">I</div><div class="tecla a-der">O</div><div class="tecla m-der">P</div><div class="tecla m-der">^</div><div class="tecla m-der">*</div>
+                    <div class="tecla">A</div><div class="tecla">S</div><div class="tecla">D</div><div class="tecla">F</div><div class="tecla">G</div>
+                    <div class="tecla">H</div><div class="tecla">J</div><div class="tecla">K</div><div class="tecla">L</div><div class="tecla">Ñ</div>
                 </div>
                 <div class="fila-teclado">
-                    <div class="tecla caps">Mayús</div><div class="tecla m-izq">A</div><div class="tecla a-izq">S</div><div class="tecla med-izq">D</div><div class="tecla i-izq">F</div><div class="tecla i-izq">G</div><div class="tecla i-der">H</div><div class="tecla i-der">J</div><div class="tecla med-der">K</div><div class="tecla a-der">L</div><div class="tecla m-der">Ñ</div><div class="tecla m-der">¨</div><div class="tecla enter">Enter</div>
+                    <div class="tecla">Z</div><div class="tecla">X</div><div class="tecla">C</div><div class="tecla">V</div><div class="tecla">B</div>
+                    <div class="tecla">N</div><div class="tecla">M</div><div class="tecla">,</div><div class="tecla">.</div><div class="tecla">-</div>
                 </div>
-                <div class="fila-teclado">
-                    <div class="tecla shift-l">Mayús</div><div class="tecla m-izq"><</div><div class="tecla m-izq">Z</div><div class="tecla a-izq">X</div><div class="tecla med-izq">C</div><div class="tecla i-izq">V</div><div class="tecla i-izq">B</div><div class="tecla i-der">N</div><div class="tecla i-der">M</div><div class="tecla med-der">,</div><div class="tecla a-der">.</div><div class="tecla m-der">-</div><div class="tecla shift-r">Mayús</div>
-                </div>
-                <div class="fila-teclado">
-                    <div class="tecla espacio" id="t-espacio"> </div>
-                </div>
+                <div class="fila-teclado"><div class="tecla espacio"> </div></div>
             </div>
         </div>
 
@@ -126,29 +111,39 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
     </div>
 </div>
 
+<div id="modal-historial">
+    <h2 style="color:#008282; border-bottom:2px solid;">Historial de Lecciones Superadas</h2>
+    <table id="tabla-historial">
+        <thead>
+            <tr>
+                <th>Lección</th><th>Brutas</th><th>Errores</th><th>Netas</th><th>PPM</th><th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody id="cuerpo-historial"></tbody>
+    </table>
+    <button onclick="document.getElementById('modal-historial').style.display='none'" style="margin-top:15px; padding:10px; width:100%;">CERRAR</button>
+</div>
+
 <script>
 const BASE_URL_NUBE = "https://raw.githubusercontent.com/Jhonbonet/ejercicios/main/"; 
 let currentUser = "", faseActual = 1, textoActivo = "", ejercicioActual = 0;
+let erroresCometidos = 0;
+let tiempoInicio = null;
 
-// Mapeo de dedos según el cuaderno MecaMatic
 const mapaDedos = {
-    'q':'MEÑIQUE IZQUIERDO', 'a':'MEÑIQUE IZQUIERDO', 'z':'MEÑIQUE IZQUIERDO', '1':'MEÑIQUE IZQUIERDO', 'º':'MEÑIQUE IZQUIERDO',
-    'w':'ANULAR IZQUIERDO', 's':'ANULAR IZQUIERDO', 'x':'ANULAR IZQUIERDO', '2':'ANULAR IZQUIERDO',
-    'e':'MEDIO IZQUIERDO', 'd':'MEDIO IZQUIERDO', 'c':'MEDIO IZQUIERDO', '3':'MEDIO IZQUIERDO',
-    'r':'ÍNDICE IZQUIERDO', 'f':'ÍNDICE IZQUIERDO', 'v':'ÍNDICE IZQUIERDO', '4':'ÍNDICE IZQUIERDO', 't':'ÍNDICE IZQUIERDO', 'g':'ÍNDICE IZQUIERDO', 'b':'ÍNDICE IZQUIERDO', '5':'ÍNDICE IZQUIERDO',
-    'y':'ÍNDICE DERECHO', 'h':'ÍNDICE DERECHO', 'n':'ÍNDICE DERECHO', '6':'ÍNDICE DERECHO', 'u':'ÍNDICE DERECHO', 'j':'ÍNDICE DERECHO', 'm':'ÍNDICE DERECHO', '7':'ÍNDICE DERECHO',
-    'i':'MEDIO DERECHO', 'k':'MEDIO DERECHO', ',':'MEDIO DERECHO', '8':'MEDIO DERECHO',
-    'o':'ANULAR DERECHO', 'l':'ANULAR DERECHO', '.':'ANULAR DERECHO', '9':'ANULAR DERECHO',
-    'p':'MEÑIQUE DERECHO', 'ñ':'MEÑIQUE DERECHO', '-':'MEÑIQUE DERECHO', '0':'MEÑIQUE DERECHO', '¡':'MEÑIQUE DERECHO', "'":'MEÑIQUE DERECHO',
-    ' ':'PULGAR (ESPACIADOR)'
+    'q':'MEÑIQUE IZQ', 'a':'MEÑIQUE IZQ', 'z':'MEÑIQUE IZQ', 'w':'ANULAR IZQ', 's':'ANULAR IZQ', 'x':'ANULAR IZQ',
+    'e':'MEDIO IZQ', 'd':'MEDIO IZQ', 'c':'MEDIO IZQ', 'r':'ÍNDICE IZQ', 'f':'ÍNDICE IZQ', 'v':'ÍNDICE IZQ',
+    't':'ÍNDICE IZQ', 'g':'ÍNDICE IZQ', 'b':'ÍNDICE IZQ', 'y':'ÍNDICE DER', 'h':'ÍNDICE DER', 'n':'ÍNDICE DER',
+    'u':'ÍNDICE DER', 'j':'ÍNDICE DER', 'm':'ÍNDICE DER', 'i':'MEDIO DER', 'k':'MEDIO DER', ',':'MEDIO DER',
+    'o':'ANULAR DER', 'l':'ANULAR DER', '.':'ANULAR DER', 'p':'MEÑIQUE DER', 'ñ':'MEÑIQUE DER', ' ':'PULGAR'
 };
 
 function login() {
     currentUser = document.getElementById('user-id').value;
-    if(!currentUser) return;
+    if(!currentUser) return alert("Ingresa un nombre");
     document.getElementById('inicio').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
-    cambiarFase(1);
+    renderizarMenu();
 }
 
 function cambiarFase(num) {
@@ -160,17 +155,21 @@ function cambiarFase(num) {
 function renderizarMenu() {
     const contenedor = document.getElementById('acordeon-lecciones');
     contenedor.innerHTML = "";
+    const logs = JSON.parse(localStorage.getItem(`logs_${currentUser}`) || "{}");
+
     for(let l = 1; l <= 10; l++) {
         let div = document.createElement("div");
         div.innerHTML = `<div style="background:#008282; color:white; padding:3px; margin-top:5px; font-size:11px; font-weight:bold;">LECCIÓN ${l}</div>`;
         let grid = document.createElement("div");
-        grid.className = "lista-ejercicios";
+        grid.className = "style='display:grid; grid-template-columns:repeat(5,1fr); gap:2px; margin-bottom:10px;'";
+        grid.style = "display:grid; grid-template-columns:repeat(5, 1fr); gap:4px; margin-bottom:15px;";
+        
         for(let e = 1; e <= 10; e++) {
             let num = ((faseActual - 1) * 100) + ((l - 1) * 10) + e;
             let btn = document.createElement("div");
-            btn.className = "btn-ejer" + (localStorage.getItem(`${currentUser}_ex_${num}`) ? " done" : "");
+            btn.className = "btn-ejer" + (logs[num] ? " done" : "");
             btn.innerText = e;
-            btn.onclick = () => cargarEjercicioNube(num);
+            btn.onclick = () => cargarEjercicio(num);
             grid.appendChild(btn);
         }
         contenedor.appendChild(div);
@@ -178,64 +177,101 @@ function renderizarMenu() {
     }
 }
 
-async function cargarEjercicioNube(id) {
-    const pantalla = document.getElementById('contenido-ejercicio');
-    pantalla.innerText = "Cargando...";
+async function cargarEjercicio(id) {
+    erroresCometidos = 0;
+    document.getElementById('err-count').innerText = "0";
     try {
-        const res = await fetch(`${BASE_URL_NUBE}${id}.txt?t=${new Date().getTime()}`);
+        const res = await fetch(`${BASE_URL_NUBE}${id}.txt`);
         const buffer = await res.arrayBuffer();
         textoActivo = new TextDecoder('windows-1252').decode(buffer).replace(/\r/g, "").trim();
         ejercicioActual = id;
         document.getElementById('input-oculto').value = "";
+        tiempoInicio = new Date();
         actualizarTablero(0);
-        setTimeout(() => document.getElementById('input-oculto').focus(), 200);
-    } catch (e) {
-        pantalla.innerHTML = `<span style="color:red">Error: Ejercicio ${id} no disponible.</span>`;
-    }
+        document.getElementById('input-oculto').focus();
+    } catch (e) { alert("Error al cargar lección"); }
 }
 
 function actualizarTablero(pos) {
     const cont = document.getElementById('contenido-ejercicio');
-    const instruccion = document.getElementById('instruccion-dedo');
+    const ins = document.getElementById('instruccion-dedo');
     cont.innerHTML = "";
-    
     for (let i = 0; i < textoActivo.length; i++) {
         let span = document.createElement("span");
         span.innerText = textoActivo[i];
         span.className = i < pos ? "letra-hecha" : (i === pos ? "letra-guia" : "");
         cont.appendChild(span);
     }
-
-    // Mostrar instrucción del dedo para la letra actual
     if (pos < textoActivo.length) {
-        let charActual = textoActivo[pos].toLowerCase();
-        instruccion.innerText = "PULSAR CON: " + (mapaDedos[charActual] || "POSICIÓN CORRECTA");
-    } else {
-        instruccion.innerText = "¡EJERCICIO TERMINADO!";
+        ins.innerText = "TECLA: [" + textoActivo[pos] + "] - USAR DEDO: " + (mapaDedos[textoActivo[pos].toLowerCase()] || "---");
     }
 }
 
 function procesar() {
-    if (!textoActivo) return;
     const input = document.getElementById('input-oculto');
     let val = input.value;
     let posActual = val.length - 1;
 
-    // VALIDACIÓN: Si la tecla presionada no es la correcta, se elimina del input
     if (val.length > 0) {
         if (val[posActual] !== textoActivo[posActual]) {
-            input.value = val.substring(0, posActual); // Borra el error
-            return; // No actualiza el tablero (el resaltador no se mueve)
+            erroresCometidos++;
+            document.getElementById('err-count').innerText = erroresCometidos;
+            input.value = val.substring(0, posActual);
+            
+            if (erroresCometidos > 5) {
+                alert("HAS SUPERADO LOS 5 ERRORES. Debes reiniciar el ejercicio.");
+                cargarEjercicio(ejercicioActual);
+                return;
+            }
+            return;
         }
     }
 
-    actualizarTablero(input.value.length);
+    actualizarTablero(val.length);
 
-    if (input.value.length >= textoActivo.length) {
-        localStorage.setItem(`${currentUser}_ex_${ejercicioActual}`, "1");
-        alert("¡Ejercicio " + ejercicioActual + " completado con éxito!");
-        renderizarMenu();
+    if (val.length >= textoActivo.length) {
+        finalizarEjercicio();
     }
+}
+
+function finalizarEjercicio() {
+    const tFin = new Date();
+    const min = (tFin - tiempoInicio) / 60000;
+    const brutas = textoActivo.length;
+    const netas = Math.max(0, brutas - (erroresCometidos * 4));
+    const ppm = Math.round(netas / min);
+
+    const resultado = {
+        id: ejercicioActual,
+        brutas: brutas,
+        errores: erroresCometidos,
+        netas: netas,
+        ppm: ppm,
+        fecha: new Date().toLocaleString()
+    };
+
+    let logs = JSON.parse(localStorage.getItem(`logs_${currentUser}`) || "{}");
+    logs[ejercicioActual] = resultado;
+    localStorage.setItem(`logs_${currentUser}`, JSON.stringify(logs));
+
+    alert(`¡FELICIDADES! Lección ${ejercicioActual} superada.\nErrores: ${erroresCometidos}\nPPM: ${ppm}`);
+    renderizarMenu();
+}
+
+function mostrarHistorial() {
+    const logs = JSON.parse(localStorage.getItem(`logs_${currentUser}`) || "{}");
+    const cuerpo = document.getElementById('cuerpo-historial');
+    cuerpo.innerHTML = "";
+    
+    Object.values(logs).forEach(res => {
+        let fila = `<tr>
+            <td>${res.id}</td><td>${res.brutas}</td><td>${res.errores}</td>
+            <td>${res.netas}</td><td>${res.ppm}</td><td>${res.fecha}</td>
+        </tr>`;
+        cuerpo.innerHTML += fila;
+    });
+
+    document.getElementById('modal-historial').style.display = 'block';
 }
 </script>
 </body>
