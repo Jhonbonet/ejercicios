@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>MecaMatic 3.0 - Sistema Profesional</title>
+<title>MecaMatic 4.0 ADN- Sistema Profesional</title>
 <style>
 :root {
     --pinky: #FFFFC0; --ring: #C0FFC0; --middle: #C0FFFF;
@@ -15,26 +15,38 @@ body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display
 #inicio, #app { width: 95%; max-width: 1100px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid #888; }
 .hidden { display: none; }
 
-/* PANTALLA DE TEXTO */
+/* PANTALLA DE TEXTO - ACTUALIZADA A ALTURA AUTOMÁTICA */
 .pantalla-verde { 
-    font-size: 22px; background-color: var(--board-bg); color: var(--text-untyped); 
-    border: 4px inset #004d40; padding: 0px 15px; height: 145px; overflow: hidden; 
-    letter-spacing: 1px; white-space: pre-wrap; line-height: 22px; position: relative; 
-    margin-bottom: 10px; display: flex; cursor: text;
+    font-size: 22px; 
+    background-color: var(--board-bg); 
+    color: var(--text-untyped); 
+    border: 4px inset #004d40; 
+    padding: 15px; 
+    min-height: 135px; /* Altura mínima inicial */
+    height: auto;      /* Se expande si el texto es largo */
+    overflow: hidden; 
+    letter-spacing: 1px; 
+    white-space: pre-wrap; 
+    line-height: 28px; 
+    position: relative; 
+    margin-bottom: 10px; 
+    display: block; 
+    cursor: text;
+    word-wrap: break-word;
 }
-#contenido-ejercicio { width: 100%; margin-top: -4px; }
+#contenido-ejercicio { width: 100%; }
 #input-oculto { position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; }
 .letra-hecha { color: var(--text-typed); }
 .letra-guia { background-color: var(--guia); color: white !important; animation: blinker 0.8s linear infinite; }
 @keyframes blinker { 50% { opacity: 0; } }
 
 /* LAYOUT PRINCIPAL */
-.contenedor-principal { display: flex; gap: 15px; }
+.contenedor-principal { display: flex; gap: 15px; align-items: flex-start; }
 .columna-izquierda { flex: 2.5; }
-.sidebar-derecha { flex: 1; background: #f0f0f0; border: 2px solid #008282; border-radius: 8px; padding: 10px; height: 82vh; overflow-y: auto; }
+.sidebar-derecha { flex: 1; background: #f0f0f0; border: 2px solid #008282; border-radius: 8px; padding: 10px; height: 85vh; overflow-y: auto; }
 
 /* TECLADO SEGÚN INDEX.DOCX */
-.teclado-container { background: #999; padding: 12px; border-radius: 12px; border: 3px solid #444; user-select: none; }
+.teclado-container { background: #999; padding: 12px; border-radius: 12px; border: 3px solid #444; user-select: none; margin-top: 10px; }
 .fila-teclado { display: flex; justify-content: center; gap: 3px; margin-bottom: 4px; }
 .tecla {
     width: 44px; height: 44px; background: white; border: 1px solid #000;
@@ -76,7 +88,7 @@ th { background: #008282; color: white; }
 <div id="inicio">
     <h1 style="color:#008282; text-align:center;">MecaMatic 3.0</h1>
     <div style="text-align:center; padding: 20px; border: 2px dashed #008282;">
-        <p>Recuperación de progreso automática (Guardado por 90 días)</p>
+        <p>Progreso guardado automáticamente por 90 días.</p>
         <input type="text" id="user-id" placeholder="Nombre de Estudiante..." style="padding:8px; width:250px;">
         <button onclick="login()" style="background:#008282; color:white; padding:9px 20px; border:none; cursor:pointer; font-weight:bold;">INGRESAR</button>
     </div>
@@ -98,7 +110,7 @@ th { background: #008282; color: white; }
         <div class="columna-izquierda">
             <div class="pantalla-verde" onclick="document.getElementById('input-oculto').focus()">
                 <input type="text" id="input-oculto" oninput="procesar()" autocomplete="off">
-                <div id="contenido-ejercicio">Selecciona una lección para comenzar...</div>
+                <div id="contenido-ejercicio">Haz clic en una lección del panel derecho para comenzar...</div>
             </div>
 
             <div id="instruccion-dedo" style="text-align:center; color:red; font-weight:bold; margin-bottom:12px; min-height: 24px; font-size: 18px;"></div>
@@ -163,9 +175,8 @@ const mapaDedos = {
 
 function login() {
     currentUser = document.getElementById('user-id').value.trim().toLowerCase();
-    if(!currentUser) return alert("Ingresa tu nombre.");
+    if(!currentUser) return alert("Por favor, ingresa tu nombre de estudiante.");
     
-    // Registrar acceso para la limpieza de los 90 días
     let accesos = JSON.parse(localStorage.getItem('meca_accesos') || "{}");
     accesos[currentUser] = Date.now();
     localStorage.setItem('meca_accesos', JSON.stringify(accesos));
@@ -237,7 +248,7 @@ async function cargarEjercicio(id) {
         tInicio = new Date();
         actualizarTablero(0);
         document.getElementById('input-oculto').focus();
-    } catch (e) { alert("Error al conectar con el servidor de ejercicios."); }
+    } catch (e) { alert("Ejercicio no encontrado en el servidor."); }
 }
 
 function actualizarTablero(pos) {
@@ -252,7 +263,7 @@ function actualizarTablero(pos) {
     }
     if (pos < textoActivo.length) {
         let char = textoActivo[pos].toLowerCase();
-        ins.innerText = "PRESIONAR [" + textoActivo[pos] + "] CON EL DEDO: " + (mapaDedos[char] || "REVISAR");
+        ins.innerText = "TECLA [" + textoActivo[pos] + "] - DEDO: " + (mapaDedos[char] || "---");
     }
 }
 
@@ -268,7 +279,7 @@ function procesar() {
             input.value = val.substring(0, posActual);
             
             if (erroresContador > 5) {
-                alert("REINICIO FORZADO: Superaste los 5 errores.");
+                alert("Superaste los 5 errores permitidos. El ejercicio se reiniciará.");
                 cargarEjercicio(ejercicioActual);
                 return;
             }
@@ -284,7 +295,7 @@ function finalizar() {
     const minutos = (tFin - tInicio) / 60000;
     const pBrutas = textoActivo.length;
     const pNetas = Math.max(0, pBrutas - (erroresContador * 4));
-    const ppm = Math.round(pNetas / minutos);
+    const ppm = Math.round(pNetas / (minutos > 0 ? minutos : 1));
 
     const logro = {
         ejercicio: ejercicioActual,
@@ -299,7 +310,7 @@ function finalizar() {
     logs[ejercicioActual] = logro;
     localStorage.setItem(`meca_logs_${currentUser}`, JSON.stringify(logs));
 
-    alert("¡EJERCICIO COMPLETADO!\nPulsaciones Netas: " + pNetas + "\nVelocidad: " + ppm + " PPM");
+    alert("¡Felicidades! Lograste " + ppm + " pulsaciones por minuto.");
     renderizarMenu();
 }
 
