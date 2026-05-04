@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MecaMatic 4.0 ADN - Pro</title>
+    <title>MecaMatic 4.0 ADN - Pro Cloud Full Sync</title>
     <style>
         :root {
             --pinky: #FFFFC0; --ring: #C0FFC0; --middle: #C0FFFF;
@@ -55,6 +55,13 @@
         .lista-ejercicios { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 15px; }
         .btn-ejer { font-size: 10px; padding: 5px; cursor: pointer; border: 1px solid #aaa; text-align: center; background: white; border-radius: 4px; }
         .btn-ejer.completado { background: #28a745 !important; color: white; font-weight: bold; }
+
+        /* Modal Historial */
+        #modal-logros { position:fixed; background:rgba(0,0,0,0.8); top:0; left:0; width:100%; height:100%; z-index:1000; display:none; }
+        .modal-content { background:white; margin:50px auto; width:90%; max-width:800px; padding:20px; border-radius:10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 12px; }
+        th { background: #008282; color: white; }
     </style>
 </head>
 <body>
@@ -62,17 +69,18 @@
 <div id="inicio">
     <h1 style="color:#008282; text-align:center;">MecaMatic 4.0 ADN</h1>
     <div style="text-align:center; padding: 30px; border: 2px dashed #008282; background: #f9f9f9;">
-        <p>Inicie sesión para sincronizar su progreso en la nube:</p>
-        <input type="text" id="user-id" placeholder="ID o Nombre de Estudiante..." style="padding:12px; width:280px; font-size: 16px; border: 2px solid #008282; border-radius: 5px;">
+        <p>Ingrese su ID para sincronizar progreso mundial:</p>
+        <input type="text" id="user-id" placeholder="Nombre o ID Estudiante..." style="padding:12px; width:280px; font-size: 16px; border: 2px solid #008282;">
         <br><br>
-        <button onclick="login()" style="background:#008282; color:white; padding:12px 40px; border:none; cursor:pointer; font-weight:bold; border-radius: 5px; font-size: 16px;">INGRESAR</button>
+        <button onclick="login()" style="background:#008282; color:white; padding:12px 40px; border:none; cursor:pointer; font-weight:bold;">INGRESAR</button>
     </div>
 </div>
 
 <div id="app" class="hidden">
     <div class="panel-info">
         <div>
-            <button onclick="logout()" style="background:#d9534f; color:white; border:none; padding:5px 10px; cursor:pointer; font-weight:bold; border-radius: 3px;">SALIR</button>
+            <button onclick="abrirLogros()" style="background:#008282; color:white; border:none; padding:5px 15px; cursor:pointer; font-weight:bold; border-radius: 3px;">LOGROS</button>
+            <button onclick="logout()" style="background:#d9534f; color:white; border:none; padding:5px 10px; cursor:pointer; font-weight:bold; border-radius: 3px; margin-left:10px;">SALIR</button>
             <span id="display-user" style="margin-left:15px; font-weight:bold; color: #00ffcc;"></span>
         </div>
         <div style="font-size: 18px; color: #5cb85c; font-weight: bold;">TIEMPO: <span id="timer">00:00</span></div>
@@ -132,6 +140,28 @@
     </div>
 </div>
 
+<div id="modal-logros">
+    <div class="modal-content">
+        <h2 style="color:#008282; margin-top:0;">MI PROGRESO EN LA NUBE</h2>
+        <div style="max-height: 400px; overflow-y: auto;">
+            <table id="tabla-logros">
+                <thead>
+                    <tr>
+                        <th>EJERCICIO</th>
+                        <th>PPM NETAS</th>
+                        <th>ERRORES</th>
+                        <th>PRECISIÓN</th>
+                        <th>FECHA</th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpo-logros">
+                    </tbody>
+            </table>
+        </div>
+        <button onclick="cerrarLogros()" style="margin-top:20px; width:100%; padding:10px; background:#444; color:white; border:none; cursor:pointer; font-weight:bold;">CERRAR</button>
+    </div>
+</div>
+
 <script>
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx06fFp8LrUC-8XN3iEBaPtFW_dJCmp_5Tx2VlBsoP0wQwoiHv7tGfw2-AEcpVeU-spSQ/exec"; 
 const BASE_URL_NUBE = "https://raw.githubusercontent.com/Jhonbonet/ejercicios/main/"; 
@@ -163,20 +193,26 @@ const shiftMap = {
 
 function sonar(frec, tipo, dur) {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-    osc.type = tipo; osc.frequency.setValueAtTime(frec, audioCtx.currentTime);
-    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + dur);
+    try {
+        const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+        osc.type = tipo; osc.frequency.setValueAtTime(frec, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + dur);
+    } catch(e) {}
 }
 
 async function login() {
     const inputUser = document.getElementById('user-id').value.trim().toUpperCase();
     if(!inputUser) return alert("Ingrese su ID");
     currentUser = inputUser;
-    document.getElementById('display-user').innerText = "Sincronizando Nube...";
+    document.getElementById('display-user').innerText = "Cargando desde la nube...";
     
+    // Cambiar vista
+    document.getElementById('inicio').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+
     try {
         const resp = await fetch(`${WEB_APP_URL}?action=load&user=${encodeURIComponent(currentUser)}`);
         const data = await resp.json();
@@ -186,8 +222,6 @@ async function login() {
     }
 
     document.getElementById('display-user').innerText = "ESTUDIANTE: " + currentUser;
-    document.getElementById('inicio').classList.add('hidden');
-    document.getElementById('app').classList.remove('hidden');
     cambiarFase(1);
 }
 
@@ -203,7 +237,7 @@ function renderizarMenu() {
     const cont = document.getElementById('acordeon-lecciones');
     cont.innerHTML = "";
     for(let l=1; l<=10; l++) {
-        cont.innerHTML += `<div style="background:#008282; color:white; padding:5px; font-size:11px; margin-top:5px;">LECCIÓN ${l}</div>`;
+        cont.innerHTML += `<div style="background:#008282; color:white; padding:5px; font-size:11px; margin-top:5px; border-radius:3px;">LECCIÓN ${l}</div>`;
         let grid = document.createElement('div'); grid.className = "lista-ejercicios";
         for(let e=1; e<=10; e++) {
             let id = ((faseActual-1)*100) + ((l-1)*10) + e;
@@ -227,8 +261,8 @@ async function cargarEjercicio(id) {
         actualizarReloj();
         esperandoInicio = true;
         document.getElementById('input-oculto').focus();
-        resaltarTeclaDual("ENTER");
-    } catch(e) { alert("Error de red"); }
+        resaltarTeclaDual("ENTER"); // Requerimiento: ENTER titila al inicio
+    } catch(e) { alert("Error cargando el ejercicio."); }
 }
 
 function teclaEnter(e) {
@@ -239,7 +273,7 @@ function teclaEnter(e) {
         if(timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
             timerSecs--; actualizarReloj();
-            if(timerSecs <= 0) { clearInterval(timerInterval); alert("Tiempo agotado"); logout(); }
+            if(timerSecs <= 0) { clearInterval(timerInterval); alert("¡Tiempo agotado!"); logout(); }
         }, 1000);
         actualizarTablero(0);
         sonar(600, 'sine', 0.1);
@@ -289,7 +323,7 @@ function actualizarTablero(pos) {
     if(!esperandoInicio && pos < textoActivo.length) {
         let char = textoActivo[pos];
         resaltarTeclaDual(char);
-        document.getElementById('instruccion-dedo').innerText = `PULSAR: ${mapaDedos[char] || '---'}`;
+        document.getElementById('instruccion-dedo').innerText = `DEDO: ${mapaDedos[char] || '---'}`;
     }
 }
 
@@ -309,7 +343,7 @@ function procesar() {
         document.getElementById('err-count').innerText = erroresContador;
         input.value = val.substring(0, pos);
         if(erroresContador >= 5) { 
-            alert("META NO ALCANZADA: Demasiados errores (5). Debes repetir el ejercicio."); 
+            alert("META NO ALCANZADA: Has excedido el límite de 5 errores.\nRepite el ejercicio."); 
             cargarEjercicio(ejercicioActual); 
         }
     }
@@ -317,7 +351,7 @@ function procesar() {
 
 async function finalizar() {
     clearInterval(timerInterval);
-    // Limpiar teclado al finalizar
+    // Limpiar teclado para evitar que teclas como Ñ se queden en rojo
     document.querySelectorAll('.tecla').forEach(t => t.classList.remove('tecla-activa'));
     
     const tMin = (new Date() - tInicio) / 60000;
@@ -326,29 +360,52 @@ async function finalizar() {
     const prec = ((pBrutas - erroresContador) / pBrutas * 100).toFixed(2);
     const fecha = new Date().toLocaleDateString();
 
-    // Guardar local
-    progresoCargado[ejercicioActual] = { ppmN, prec };
-    localStorage.setItem('meca_'+currentUser, JSON.stringify(progresoCargado));
-
-    // Guardar Nube Sync
+    // Guardar en la nube sincronizada
     const params = `?action=save&user=${encodeURIComponent(currentUser)}&ejercicio=${ejercicioActual}&ppm_netas=${ppmN}&errores=${erroresContador}&precision=${prec}&fecha=${encodeURIComponent(fecha)}`;
     
-    document.getElementById('display-user').innerText = "Guardando progreso...";
+    document.getElementById('display-user').innerText = "Sincronizando progreso...";
     
-    // Sincronización Real
     try {
         await fetch(WEB_APP_URL + params, { mode: 'no-cors' });
+        progresoCargado[ejercicioActual] = { ppmN, prec, err: erroresContador, fecha };
+        localStorage.setItem('meca_'+currentUser, JSON.stringify(progresoCargado));
         document.getElementById('display-user').innerText = "ESTUDIANTE: " + currentUser + " (Sincronizado)";
-    } catch(e) {
-        console.log("Error de sync nube");
-    }
+    } catch(e) {}
 
-    alert(`¡FELICIDADES! META ALCANZADA\n\nVelocidad: ${ppmN} PPM\nPrecisión: ${prec}%\nErrores: ${erroresContador}`);
+    alert(`¡FELICIDADES! META ALCANZADA\n\nVelocidad: ${ppmN} PPM\nPrecisión: ${prec}%\nErrores: ${erroresContador}\n\nPasa al siguiente ejercicio...`);
 
-    // Pasar al siguiente automáticamente
-    let proximo = ejercicioActual + 1;
-    cargarEjercicio(proximo);
+    // Cargar siguiente ejercicio automáticamente
+    cargarEjercicio(ejercicioActual + 1);
     renderizarMenu();
+}
+
+// FUNCIONES DE HISTORIAL RESTAURADAS
+function abrirLogros() {
+    const cuerpo = document.getElementById('cuerpo-logros');
+    cuerpo.innerHTML = "";
+    const ids = Object.keys(progresoCargado).sort((a,b) => a-b);
+    
+    if(ids.length === 0) {
+        cuerpo.innerHTML = "<tr><td colspan='5'>No hay datos sincronizados aún.</td></tr>";
+    } else {
+        ids.forEach(id => {
+            let log = progresoCargado[id];
+            cuerpo.innerHTML += `
+                <tr>
+                    <td>${id}</td>
+                    <td>${log.ppmN || '-'}</td>
+                    <td>${log.err || '0'}</td>
+                    <td>${log.prec || '100'}%</td>
+                    <td>${log.fecha || '-'}</td>
+                </tr>
+            `;
+        });
+    }
+    document.getElementById('modal-logros').style.display = 'block';
+}
+
+function cerrarLogros() {
+    document.getElementById('modal-logros').style.display = 'none';
 }
 </script>
 </body>
