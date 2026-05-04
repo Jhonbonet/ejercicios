@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MecaMatic 4.0 ADN - Pro -</title>
+    <title>MecaMatic 4.0 ADN - Pro Cloud Full Symbols</title>
     <style>
         :root {
             --pinky: #FFFFC0; --ring: #C0FFC0; --middle: #C0FFFF;
@@ -31,8 +31,8 @@
         .sidebar-derecha { flex: 1; background: #f0f0f0; border: 2px solid #008282; border-radius: 8px; padding: 10px; height: 75vh; overflow-y: auto; }
         .teclado-container { background: #444; padding: 12px; border-radius: 12px; border: 4px solid #222; user-select: none; }
         .fila-teclado { display: flex; justify-content: center; gap: 4px; margin-bottom: 5px; }
-        .tecla { width: 48px; height: 50px; background: white; border: 1px solid #000; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: bold; font-size: 11px; border-radius: 6px; box-shadow: 2px 3px 0px #111; }
-        .tecla.enter { width: 100px; background: #888; color: white; }
+        .tecla { width: 48px; height: 50px; background: white; border: 1px solid #000; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: bold; font-size: 10px; border-radius: 6px; box-shadow: 2px 3px 0px #111; text-align: center; line-height: 1.1; }
+        .tecla.enter { width: 100px; background: #888; color: white; font-size: 11px; }
         .tecla.espacio { width: 350px; background: var(--thumb); }
         .m-izq { background: var(--pinky); } .a-izq { background: var(--ring); } .med-izq { background: var(--middle); } .i-izq { background: var(--index-l); }
         .i-der { background: var(--index-r); } .med-der { background: var(--middle); } .a-der { background: var(--ring); } .m-der { background: var(--pinky); }
@@ -77,20 +77,32 @@
 
             <div class="teclado-container" id="teclado-visual">
                 <div class="fila-teclado">
-                    <div class="tecla m-izq" id="key-º">º</div><div class="tecla m-izq" id="key-1">1</div><div class="tecla m-izq" id="key-2">2</div><div class="tecla a-izq" id="key-3">3</div><div class="tecla med-izq" id="key-4">4</div><div class="tecla i-izq" id="key-5">5</div><div class="tecla i-izq" id="key-6">6</div><div class="tecla i-der" id="key-7">7</div><div class="tecla i-der" id="key-8">8</div><div class="tecla med-der" id="key-9">9</div><div class="tecla a-der" id="key-0">0</div><div class="tecla m-der" id="key-'">'</div><div class="tecla m-der" id="key-¡">¡</div>
+                    <div class="tecla m-izq" id="key-º">ª<br>º</div>
+                    <div class="tecla m-izq" id="key-1">!<br>1</div>
+                    <div class="tecla m-izq" id="key-2">"<br>2</div>
+                    <div class="tecla a-izq" id="key-3">#<br>3</div>
+                    <div class="tecla med-izq" id="key-4">$<br>4</div>
+                    <div class="tecla i-izq" id="key-5">%<br>5</div>
+                    <div class="tecla i-izq" id="key-6">&<br>6</div>
+                    <div class="tecla i-der" id="key-7">/<br>7</div>
+                    <div class="tecla i-der" id="key-8">(<br>8</div>
+                    <div class="tecla med-der" id="key-9">)<br>9</div>
+                    <div class="tecla a-der" id="key-0">=<br>0</div>
+                    <div class="tecla m-der" id="key-'">?<br>'</div>
+                    <div class="tecla m-der" id="key-¡">¿<br>¡</div>
                 </div>
                 <div class="fila-teclado">
                     <div class="tecla" style="width:60px">TAB</div>
-                    <div class="tecla m-izq" id="key-Q">Q</div><div class="tecla a-izq" id="key-W">W</div><div class="tecla med-izq" id="key-E">E</div><div class="tecla i-izq" id="key-R">R</div><div class="tecla i-izq" id="key-T">T</div><div class="tecla i-der" id="key-Y">Y</div><div class="tecla i-der" id="key-U">U</div><div class="tecla med-der" id="key-I">I</div><div class="tecla a-der" id="key-O">O</div><div class="tecla m-der" id="key-P">P</div><div class="tecla m-der" id="key-´">´</div><div class="tecla m-der" id="key-^">^</div>
+                    <div class="tecla m-izq" id="key-Q">Q</div><div class="tecla a-izq" id="key-W">W</div><div class="tecla med-izq" id="key-E">E</div><div class="tecla i-izq" id="key-R">R</div><div class="tecla i-izq" id="key-T">T</div><div class="tecla i-der" id="key-Y">Y</div><div class="tecla i-der" id="key-U">U</div><div class="tecla med-der" id="key-I">I</div><div class="tecla a-der" id="key-O">O</div><div class="tecla m-der" id="key-P">P</div><div class="tecla m-der" id="key-´">¨<br>´</div><div class="tecla m-der" id="key-^">^</div>
                 </div>
                 <div class="fila-teclado">
                     <div class="tecla" style="width:80px">BLOQ</div>
-                    <div class="tecla m-izq" id="key-A">A</div><div class="tecla a-izq" id="key-S">S</div><div class="tecla med-izq" id="key-D">D</div><div class="tecla i-izq" id="key-F">F</div><div class="tecla i-izq" id="key-G">G</div><div class="tecla i-der" id="key-H">H</div><div class="tecla i-der" id="key-J">J</div><div class="tecla med-der" id="key-K">K</div><div class="tecla a-der" id="key-L">L</div><div class="tecla m-der" id="key-Ñ">Ñ</div><div class="tecla m-der" id="key-¨">¨</div>
+                    <div class="tecla m-izq" id="key-A">A</div><div class="tecla a-izq" id="key-S">S</div><div class="tecla med-izq" id="key-D">D</div><div class="tecla i-izq" id="key-F">F</div><div class="tecla i-izq" id="key-G">G</div><div class="tecla i-der" id="key-H">H</div><div class="tecla i-der" id="key-J">J</div><div class="tecla med-der" id="key-K">K</div><div class="tecla a-der" id="key-L">L</div><div class="tecla m-der" id="key-Ñ">Ñ</div><div class="tecla m-der" id="key-*">*</div>
                     <div class="tecla enter" id="key-ENTER">ENTER</div>
                 </div>
                 <div class="fila-teclado">
                     <div class="tecla" id="key-SHIFT-L" style="width:100px">SHIFT</div>
-                    <div class="tecla m-izq" id="key-<"><</div><div class="tecla m-izq" id="key-Z">Z</div><div class="tecla a-izq" id="key-X">X</div><div class="tecla med-izq" id="key-C">C</div><div class="tecla i-izq" id="key-V">V</div><div class="tecla i-izq" id="key-B">B</div><div class="tecla i-der" id="key-N">N</div><div class="tecla i-der" id="key-M">M</div><div class="tecla med-der" id="key-,">,</div><div class="tecla a-der" id="key-.">.</div><div class="tecla m-der" id="key--">-</div>
+                    <div class="tecla m-izq" id="key-<">><br><</div><div class="tecla m-izq" id="key-Z">Z</div><div class="tecla a-izq" id="key-X">X</div><div class="tecla med-izq" id="key-C">C</div><div class="tecla i-izq" id="key-V">V</div><div class="tecla i-izq" id="key-B">B</div><div class="tecla i-der" id="key-N">N</div><div class="tecla i-der" id="key-M">M</div><div class="tecla med-der" id="key-,">;<br>,</div><div class="tecla a-der" id="key-.">:<br>.</div><div class="tecla m-der" id="key--">_<br>-</div>
                     <div class="tecla" id="key-SHIFT-R" style="width:100px">SHIFT</div>
                 </div>
                 <div class="fila-teclado">
@@ -131,23 +143,23 @@ let timerSecs = 0, timerInterval = null, audioCtx = null;
 let progresoCargado = {};
 
 const mapaDedos = { 
-    'q':'MEÑIQUE IZQ', 'a':'MEÑIQUE IZQ', 'z':'MEÑIQUE IZQ', '1':'MEÑIQUE IZQ', 'º':'MEÑIQUE IZQ', '<':'MEÑIQUE IZQ',
-    'w':'ANULAR IZQ', 's':'ANULAR IZQ', 'x':'ANULAR IZQ', '2':'ANULAR IZQ',
-    'e':'MEDIO IZQ', 'd':'MEDIO IZQ', 'c':'MEDIO IZQ', '3':'MEDIO IZQ',
-    'r':'ÍNDICE IZQ', 'f':'ÍNDICE IZQ', 'v':'ÍNDICE IZQ', '4':'ÍNDICE IZQ',
-    't':'ÍNDICE IZQ', 'g':'ÍNDICE IZQ', 'b':'ÍNDICE IZQ', '5':'ÍNDICE IZQ', '6':'ÍNDICE IZQ',
-    'y':'ÍNDICE DER', 'h':'ÍNDICE DER', 'n':'ÍNDICE DER', '7':'ÍNDICE DER',
-    'u':'ÍNDICE DER', 'j':'ÍNDICE DER', 'm':'ÍNDICE DER', 
-    'i':'MEDIO DER', 'k':'MEDIO DER', ',':'MEDIO DER', '8':'MEDIO DER',
-    'o':'ANULAR DER', 'l':'ANULAR DER', '.':'ANULAR DER', '9':'ANULAR DER',
-    'p':'MEÑIQUE DER', 'ñ':'MEÑIQUE DER', '0':'MEÑIQUE DER', "'":'MEÑIQUE DER', '¡':'MEÑIQUE DER', '´':'MEÑIQUE DER', '+':'MEÑIQUE DER', '-':'MEÑIQUE DER',
+    'q':'MEÑIQUE IZQ', 'a':'MEÑIQUE IZQ', 'z':'MEÑIQUE IZQ', '1':'MEÑIQUE IZQ', 'º':'MEÑIQUE IZQ', '<':'MEÑIQUE IZQ', '!':'MEÑIQUE IZQ', 'ª':'MEÑIQUE IZQ',
+    'w':'ANULAR IZQ', 's':'ANULAR IZQ', 'x':'ANULAR IZQ', '2':'ANULAR IZQ', '"':'ANULAR IZQ',
+    'e':'MEDIO IZQ', 'd':'MEDIO IZQ', 'c':'MEDIO IZQ', '3':'MEDIO IZQ', '#':'MEDIO IZQ',
+    'r':'ÍNDICE IZQ', 'f':'ÍNDICE IZQ', 'v':'ÍNDICE IZQ', '4':'ÍNDICE IZQ', '$':'ÍNDICE IZQ',
+    't':'ÍNDICE IZQ', 'g':'ÍNDICE IZQ', 'b':'ÍNDICE IZQ', '5':'ÍNDICE IZQ', '%':'ÍNDICE IZQ',
+    '6':'ÍNDICE IZQ', '&':'ÍNDICE IZQ',
+    'y':'ÍNDICE DER', 'h':'ÍNDICE DER', 'n':'ÍNDICE DER', '7':'ÍNDICE DER', '/':'ÍNDICE DER',
+    'u':'ÍNDICE DER', 'j':'ÍNDICE DER', 'm':'ÍNDICE DER', '8':'ÍNDICE DER', '(':'ÍNDICE DER',
+    'i':'MEDIO DER', 'k':'MEDIO DER', ',':'MEDIO DER', '9':'MEDIO DER', ')':'MEDIO DER', ';':'MEDIO DER',
+    'o':'ANULAR DER', 'l':'ANULAR DER', '.':'ANULAR DER', '0':'ANULAR DER', '=':'ANULAR DER', ':':'ANULAR DER',
+    'p':'MEÑIQUE DER', 'ñ':'MEÑIQUE DER', "'":'MEÑIQUE DER', '?':'MEÑIQUE DER', '¡':'MEÑIQUE DER', '¿':'MEÑIQUE DER', '´':'MEÑIQUE DER', '¨':'MEÑIQUE DER', '-':'MEÑIQUE DER', '_':'MEÑIQUE DER',
     ' ':'PULGAR' 
 };
 
-// Mapa de caracteres que requieren Shift en teclado español
 const shiftMap = {
-    '!':'1', '"':'2', '·':'3', '$':'4', '%':'5', '&':'6', '/':'7', '(':'8', ')':'9', '=':'0', '?':"'", '¿':'¡',
-    '>':'<', ';':',', ':':'.', '_':'-', '*':'^', 'ª':'º'
+    '!':'1', '"':'2', '#':'3', '$':'4', '%':'5', '&':'6', '/':'7', '(':'8', ')':'9', '=':'0', '?':"'", '¿':'¡',
+    '>':'<', ';':',', ':':'.', '_':'-', 'ª':'º', '¨':'´'
 };
 
 function iniciarAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
@@ -254,19 +266,18 @@ function resaltarTeclaDual(char) {
     let requiereShift = false;
     let teclaBase = char.toUpperCase();
 
-    // Lógica para Mayúsculas
+    // Mayúsculas
     if (char !== " " && char === char.toUpperCase() && char !== char.toLowerCase()) {
         requiereShift = true;
-        teclaBase = char.toUpperCase();
     }
 
-    // Lógica para Símbolos de la fila numérica y otros (Shift + Tecla)
+    // Símbolos (Shift + Número/Tecla)
     if (shiftMap[char]) {
         requiereShift = true;
         teclaBase = shiftMap[char];
     }
 
-    // Lógica para tildes
+    // Tildes
     const tildes = {'á':'A', 'é':'E', 'í':'I', 'ó':'O', 'ú':'U', 'Á':'A', 'É':'E', 'Í':'I', 'Ó':'O', 'Ú':'U'};
     if (tildes[char]) {
         document.getElementById('key-´').classList.add('tecla-activa');
@@ -274,9 +285,9 @@ function resaltarTeclaDual(char) {
         if(char === char.toUpperCase()) requiereShift = true;
     }
 
-    // Activar Shift si es necesario
+    // Activar Shift (Combinación titilando)
     if (requiereShift) {
-        const manoDedo = mapaDedos[char.toLowerCase()] || "";
+        const manoDedo = mapaDedos[char] || "";
         if (manoDedo.includes("DER")) {
             document.getElementById('key-SHIFT-L').classList.add('tecla-activa');
         } else {
@@ -300,7 +311,7 @@ function actualizarTablero(pos) {
     if(pos < textoActivo.length) {
         let char = textoActivo[pos];
         resaltarTeclaDual(char);
-        document.getElementById('instruccion-dedo').innerText = `DEDO: ${mapaDedos[char.toLowerCase()] || '---'}`;
+        document.getElementById('instruccion-dedo').innerText = `DEDO: ${mapaDedos[char] || '---'}`;
     }
 }
 
