@@ -9,6 +9,7 @@
             --index-l: #FFC0FF; --index-r: #FF96FF; --thumb: #FFC0C0;
             --guia: #ff0000; --board-bg: #008282; --text-untyped: #ffffff;
             --text-typed: #000000;
+            --fuchsia: #ff00ff;
         }
         body { font-family: 'Courier New', monospace; background-color: #C0C0C0; display: flex; flex-direction: column; align-items: center; padding: 5px; margin: 0; }
         #inicio, #app { width: 95%; max-width: 1100px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid #888; margin-top: 20px; }
@@ -29,8 +30,10 @@
         
         @keyframes blinker { 50% { opacity: 0.3; } }
         @keyframes blinker-key-red { 50% { background-color: #ff0000 !important; color: white !important; transform: scale(1.02); } }
+        @keyframes blinker-key-fuchsia { 50% { background-color: var(--fuchsia) !important; color: white !important; transform: scale(1.01); } }
         
         .tecla-activa { animation: blinker-key-red 0.6s linear infinite !important; z-index: 10; border: 2px solid black !important; background-color: #ff0000 !important; color: white !important; }
+        .tecla-inicio-espacio { animation: blinker-key-fuchsia 0.6s linear infinite !important; z-index: 10; border: 2px solid black !important; background-color: var(--fuchsia) !important; color: white !important; }
 
         .contenedor-principal { display: flex; gap: 15px; }
         .columna-izquierda { flex: 2.5; }
@@ -56,7 +59,6 @@
         .btn-ejer { font-size: 10px; padding: 5px; cursor: pointer; border: 1px solid #aaa; text-align: center; background: white; border-radius: 4px; }
         .btn-ejer.completado { background: #28a745 !important; color: white; font-weight: bold; }
 
-        /* Modal Historial */
         #modal-logros { position:fixed; background:rgba(0,0,0,0.8); top:0; left:0; width:100%; height:100%; z-index:1000; display:none; }
         .modal-content { background:white; margin:50px auto; width:90%; max-width:800px; padding:20px; border-radius:10px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
@@ -209,7 +211,6 @@ async function login() {
     currentUser = inputUser;
     document.getElementById('display-user').innerText = "Cargando desde la nube...";
     
-    // Cambiar vista
     document.getElementById('inicio').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
 
@@ -261,12 +262,22 @@ async function cargarEjercicio(id) {
         actualizarReloj();
         esperandoInicio = true;
         document.getElementById('input-oculto').focus();
-        resaltarTeclaDual("ENTER"); // Requerimiento: ENTER titila al inicio
+        
+        // RESET TECLAS Y ACTIVAR ENTER Y ESPACIO
+        document.querySelectorAll('.tecla').forEach(t => {
+            t.classList.remove('tecla-activa');
+            t.classList.remove('tecla-inicio-espacio');
+        });
+        document.getElementById('key-ENTER').classList.add('tecla-activa');
+        document.getElementById('key- ').classList.add('tecla-inicio-espacio');
+        
     } catch(e) { alert("Error cargando el ejercicio."); }
 }
 
 function teclaEnter(e) {
-    if(esperandoInicio && e.key === "Enter") {
+    // AHORA ENTER O ESPACIO INICIAN EL EJERCICIO
+    if(esperandoInicio && (e.key === "Enter" || e.key === " ")) {
+        e.preventDefault(); // Evita que el espacio ruede la pantalla
         esperandoInicio = false;
         document.getElementById('input-oculto').value = "";
         tInicio = new Date();
@@ -275,6 +286,11 @@ function teclaEnter(e) {
             timerSecs--; actualizarReloj();
             if(timerSecs <= 0) { clearInterval(timerInterval); alert("¡Tiempo agotado!"); logout(); }
         }, 1000);
+        
+        // Limpiar animaciones de inicio antes de empezar
+        document.getElementById('key-ENTER').classList.remove('tecla-activa');
+        document.getElementById('key- ').classList.remove('tecla-inicio-espacio');
+        
         actualizarTablero(0);
         sonar(600, 'sine', 0.1);
     }
@@ -286,8 +302,10 @@ function actualizarReloj() {
 }
 
 function resaltarTeclaDual(char) {
-    document.querySelectorAll('.tecla').forEach(t => t.classList.remove('tecla-activa'));
-    if(char === "ENTER") { document.getElementById('key-ENTER').classList.add('tecla-activa'); return; }
+    document.querySelectorAll('.tecla').forEach(t => {
+        t.classList.remove('tecla-activa');
+        t.classList.remove('tecla-inicio-espacio');
+    });
 
     let requiereShift = false;
     let teclaBase = char.toUpperCase();
@@ -351,8 +369,10 @@ function procesar() {
 
 async function finalizar() {
     clearInterval(timerInterval);
-    // Limpiar teclado para evitar que teclas como Ñ se queden en rojo
-    document.querySelectorAll('.tecla').forEach(t => t.classList.remove('tecla-activa'));
+    document.querySelectorAll('.tecla').forEach(t => {
+        t.classList.remove('tecla-activa');
+        t.classList.remove('tecla-inicio-espacio');
+    });
     
     const tMin = (new Date() - tInicio) / 60000;
     const pBrutas = textoActivo.length;
@@ -360,7 +380,6 @@ async function finalizar() {
     const prec = ((pBrutas - erroresContador) / pBrutas * 100).toFixed(2);
     const fecha = new Date().toLocaleDateString();
 
-    // Guardar en la nube sincronizada
     const params = `?action=save&user=${encodeURIComponent(currentUser)}&ejercicio=${ejercicioActual}&ppm_netas=${ppmN}&errores=${erroresContador}&precision=${prec}&fecha=${encodeURIComponent(fecha)}`;
     
     document.getElementById('display-user').innerText = "Sincronizando progreso...";
@@ -374,12 +393,10 @@ async function finalizar() {
 
     alert(`¡FELICIDADES! META ALCANZADA\n\nVelocidad: ${ppmN} PPM\nPrecisión: ${prec}%\nErrores: ${erroresContador}\n\nPasa al siguiente ejercicio...`);
 
-    // Cargar siguiente ejercicio automáticamente
     cargarEjercicio(ejercicioActual + 1);
     renderizarMenu();
 }
 
-// FUNCIONES DE HISTORIAL RESTAURADAS
 function abrirLogros() {
     const cuerpo = document.getElementById('cuerpo-logros');
     cuerpo.innerHTML = "";
